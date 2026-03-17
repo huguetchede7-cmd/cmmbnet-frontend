@@ -1,0 +1,30 @@
+import { UserModelTypes } from "./UserModelTypes";
+
+export interface CompanyAccountModel {
+  logo_path: string;
+  rccm_path: string;
+  ifu_path: string;
+  updated_at: string;
+  id: number;
+  user_id ?: number;
+  name: string;
+  address: string;
+  longitude: string;
+  latitude: string;
+  rccm: string;
+  ifu: string;
+  national_id: string;
+  city: string;
+  country: string;
+  phone_number: string;
+  email: string;
+  website: string | null;
+  validated_by ?: string | null;
+  validated_at ?: string | null;
+  verify_status ?: boolean;
+  description: string;
+  social_media: string | null;
+  created_at: string;
+  deleted_at ?: string | null;
+  user: UserModelTypes;
+};

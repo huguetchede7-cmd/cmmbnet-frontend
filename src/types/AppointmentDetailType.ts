@@ -1,0 +1,116 @@
+export type AppointmentDetailType = {
+  appointment: {
+    more_detail: {
+     fullname?: string;
+     email?: string;
+     phone?: string;
+     notes?: string;
+    };
+    id: number;
+    reference: string;
+    shop_id: number;
+    service_id: number;
+    user_id: number;
+    start_time: string;
+    end_time: string;
+    status: number;
+    canceled_by: number | null;
+    canceled_motif: string | null;
+    validated_by: number | null;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+  };
+  store: {
+    picture: string;
+    video: string | null;
+    id: number;
+    slug: string;
+    name: string;
+    short_description: string;
+    phone1: string;
+    phone2: string;
+    address: string;
+    longitude: string;
+    latitude: string;
+    whatsapp1: string;
+    whatsapp2: string;
+    email: string;
+    created_by: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+  };
+  service: {
+    picture: string;
+    icon: string;
+    id: number;
+    slug: string;
+    name: string;
+    price: number;
+    is_visible: boolean;
+    short_description: string;
+    full_description: string;
+    created_by: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+  };
+  user: UserType;
+  validatedBy: UserType;
+  transaction: {
+    id: number;
+    uuid: string;
+    linked_reference: string;
+    external_trx_id: string;
+    payer: number;
+    payment_method: number;
+    service: number;
+    amount: number;
+    charge: number;
+    total_amount: number;
+    payment_statut: number;
+    created_at: string;
+    updated_at: string;
+  };
+  documents: DocumentType[];
+};
+
+type UserType = {
+  fullname: string;
+  avatar: string;
+  email_verified_at: string | null;
+  phone_verified_at: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  civility: string | null;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  ban_statut: boolean;
+  kyc: string;
+  account_type: number;
+  jwt_token: string;
+  fcm_token: string | null;
+  created_by: number | null;
+  password: string;
+};
+
+type DocumentType = {
+  file: string;
+  id: number;
+  name: string;
+  ref: string;
+  uploaded_by: number;
+  intended_for: number;
+  source: string;
+  source_ref: number;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+};
