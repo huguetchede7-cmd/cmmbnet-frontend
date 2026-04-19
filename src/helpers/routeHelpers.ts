@@ -12,6 +12,12 @@ export const routeHelpers = {
         notifications: "/dashboard/notifications",
         logout: "/dashboard/logout",
 
+        clients: {
+            index: "/dashboard/clients",
+            create: "/dashboard/clients/create",
+            show: "/dashboard/clients/detail",
+        },
+
         administrator: {
             index: "/dashboard/administrator",
             create: "/dashboard/administrator/create",

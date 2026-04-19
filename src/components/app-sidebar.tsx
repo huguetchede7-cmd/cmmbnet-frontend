@@ -42,7 +42,7 @@ const data = {
       title: "Clients",
       icon: <UsersIcon />,
       items: [
-        { title: "Liste des clients", url: "/clients" },
+        { title: "Liste des clients", url: routeHelpers.dashboard.clients.index},
         { title: "Ajouter client", url: "/clients/create" },
         { title: "Groupes", url: "/clients/groups" },
       ],
