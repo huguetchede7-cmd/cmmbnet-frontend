@@ -12,6 +12,7 @@ import AdministratorPage from "@/pages/app/administrators/AdministratorPage.tsx"
 import CreateAdministratorPage from "@/pages/app/administrators/CreateAdministratorPage.tsx"
 import DetailAdministratorPage from "@/pages/app/administrators/DetailAdiministratorPage.tsx"
 import ClientsListesPages from './pages/app/clients/clients-listes-pages';
+import CreateClientPage from "@/pages/app/clients/create-clients-pages.tsx"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path={routeHelpers.dashboard.index} element={<DashboardPage />} />
 
             <Route path={routeHelpers.dashboard.clients.index} element={<ClientsListesPages />} />
+            <Route path={routeHelpers.dashboard.clients.create} element={<CreateClientPage />} />
 
             <Route path={routeHelpers.dashboard.administrator.index} element={<AdministratorPage />} />
             <Route path={routeHelpers.dashboard.administrator.create} element={<CreateAdministratorPage />} />

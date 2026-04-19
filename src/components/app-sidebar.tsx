@@ -43,7 +43,7 @@ const data = {
       icon: <UsersIcon />,
       items: [
         { title: "Liste des clients", url: routeHelpers.dashboard.clients.index},
-        { title: "Ajouter client", url: "/clients/create" },
+        { title: "Ajouter client", url:routeHelpers.dashboard.clients.create },
         { title: "Groupes", url: "/clients/groups" },
       ],
     },
