@@ -1,6 +1,4 @@
-
 import apiService from "@/api/apiService.ts";
-import apiRoutes from "@/api/apiRoutes.ts";
 import { useAuth } from "@/lib/auth.ts";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,8 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { User, MapPin, CreditCard, FileText, Camera } from "lucide-react";
+import { User, MapPin, CreditCard, FileText } from "lucide-react";
 import z from "zod/v3"
 import { routeHelpers } from "@/helpers/routeHelpers.ts"
 
@@ -139,7 +136,7 @@ export default function CreateClientPage() {
     {
       tag: "primary_phone",
       label: "Téléphone principal",
-      input_type: "tel",
+      input_type: "phone",
       size: "col-span-6",
       placeholder: "+229 97 00 00 00",
       required: true,
@@ -147,7 +144,7 @@ export default function CreateClientPage() {
     {
       tag: "secondary_phone",
       label: "Téléphone secondaire",
-      input_type: "tel",
+      input_type: "phone",
       size: "col-span-6",
       placeholder: "+229 96 00 00 00",
       required: false,
@@ -163,7 +160,6 @@ export default function CreateClientPage() {
       size: "col-span-6",
       placeholder: "Généré automatiquement",
       required: false,
-      readonly: true,
     },
     {
       tag: "join_date",
@@ -342,7 +338,7 @@ export default function CreateClientPage() {
 
       await apiService.post(
         {
-          url: apiRoutes.admin.app.clients.create,
+          url: ""/*apiRoutes.admin.app.clients.create*/,
           body: payload,
         },
         { userToken: user?.token ?? "" }
@@ -406,7 +402,7 @@ export default function CreateClientPage() {
                   // @ts-expect-error
                   form={form}
                   tag={option.tag}
-                  readonly={option.readonly || false}
+                  readonly={false}
                 />
               ))}
         </div>
