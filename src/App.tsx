@@ -43,33 +43,29 @@ function App() {
           </Route>
 
           <Route path="dashboard" element={<DashboardLayout />}>
-            <Route path={routeHelpers.dashboard.index} element={<DashboardPage />} />
-
-            <Route path={routeHelpers.dashboard.clients.index} element={<ClientsListesPages />} />
-            <Route path={routeHelpers.dashboard.clients.create} element={<CreateClientPage />} />
-            <Route path={routeHelpers.dashboard.groupes.index} element={<GroupesPages />} />
-            <Route path={routeHelpers.dashboard.groupes.create} element={<CreateGroupePage />} />
-            <Route path={routeHelpers.dashboard.comptes.index} element={<ComptesListesPages />} />
-            <Route path={routeHelpers.dashboard.comptes.create} element={<CreateComptePage />} />
-            <Route path={routeHelpers.dashboard.epargne.depots.index} element={<DepotsListesPages />} />
-            <Route path={routeHelpers.dashboard.epargne.depots.create} element={<CreateDepotPage />} />
-            <Route path={routeHelpers.dashboard.epargne.retraits.index} element={<RetraitsListesPages />} />
-            <Route path={routeHelpers.dashboard.epargne.retraits.create} element={<CreateRetraitPage />} />
-            <Route path={routeHelpers.dashboard.transactions.historique.index} element={<HistoriquePages />} />
-            <Route path={routeHelpers.dashboard.transactions.transfert.index} element={<CreateTransfertPage />} />
-            <Route path={routeHelpers.dashboard.paiements.index} element={<PaiementsListesPages />} />
-            <Route path={routeHelpers.dashboard.paiements.factures.index} element={<FacturesListesPages />} />
-            <Route path={routeHelpers.dashboard.rapports.financier.index} element={<RapportFinancierPages />} />
-            <Route path={routeHelpers.dashboard.rapports.epargne.index} element={<RapportEpargnePages />} />
-            <Route path={`${routeHelpers.dashboard.groupes.show}/:id`} element={<DetailGroupePage />} />
-
-            <Route path={routeHelpers.dashboard.administrator.index} element={<AdministratorPage />} />
-            <Route path={routeHelpers.dashboard.administrator.create} element={<CreateAdministratorPage />} />
-            <Route path={`${routeHelpers.dashboard.administrator.show}/:id`} element={<DetailAdministratorPage />} />
-
-            {/*<Route path={`/dashboard/403`} element={<ForbiddenPage />} />*/}
-            <Route path={routeHelpers.dashboard.logout} element={<LogoutPage />} />
-          </Route>
+  <Route path="home" element={<DashboardPage />} />
+  <Route path="clients" element={<ClientsListesPages />} />
+  <Route path="clients/create" element={<CreateClientPage />} />
+  <Route path="groupes" element={<GroupesPages />} />
+  <Route path="groupes/create" element={<CreateGroupePage />} />
+  <Route path="groupes/detail/:id" element={<DetailGroupePage />} />
+  <Route path="comptes" element={<ComptesListesPages />} />
+  <Route path="comptes/create" element={<CreateComptePage />} />
+  <Route path="epargne/depots" element={<DepotsListesPages />} />
+  <Route path="epargne/depots/create" element={<CreateDepotPage />} />
+  <Route path="epargne/retraits" element={<RetraitsListesPages />} />
+  <Route path="epargne/retraits/create" element={<CreateRetraitPage />} />
+  <Route path="transactions/historique" element={<HistoriquePages />} />
+  <Route path="transactions/transfert" element={<CreateTransfertPage />} />
+  <Route path="paiements" element={<PaiementsListesPages />} />
+  <Route path="paiements/factures" element={<FacturesListesPages />} />
+  <Route path="rapports/financier" element={<RapportFinancierPages />} />
+  <Route path="rapports/epargne" element={<RapportEpargnePages />} />
+  <Route path="administrator" element={<AdministratorPage />} />
+  <Route path="administrator/create" element={<CreateAdministratorPage />} />
+  <Route path="administrator/detail/:id" element={<DetailAdministratorPage />} />
+  <Route path="logout" element={<LogoutPage />} />
+</Route>
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Route>
       </Routes>

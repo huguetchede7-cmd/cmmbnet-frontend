@@ -1,3 +1,4 @@
+import apiRoutes from "@/api/apiRoutes.ts";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -28,10 +29,10 @@ export default function ClientsListesPages() {
     setLoading(true);
     try {
       const response = await apiService.get(
-        { url: "" /* apiRoutes.admin.app.clients.index */ },
-        { userToken: user?.token ?? "" }
-      );
-      setClients(response?.data ?? []);
+     { url: apiRoutes.admin.app.clients.list },
+     { userToken: user?.token ?? "" }
+     );
+      setClients(response?.data?.list ?? []);
     } catch (error) {
       console.error("Erreur chargement clients", error);
     } finally {
