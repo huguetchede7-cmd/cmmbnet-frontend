@@ -18,7 +18,6 @@ import {
   UsersIcon,
   UserIcon,
   WalletIcon,
-  BanknoteIcon,
   ArrowRightLeftIcon,
   CreditCardIcon,
   BarChart3Icon,
@@ -32,19 +31,19 @@ import { routeHelpers } from "@/helpers/routeHelpers.ts"
  */
 const data = {
   navMain: [
-    {
+     {
       title: "Tableau de bord",
-      url: routeHelpers.dashboard.index,
+      url: "/dashboard/home",
       icon: <LayoutDashboardIcon />,
-    },
+     },
 
     {
       title: "Clients",
       icon: <UsersIcon />,
       items: [
-        { title: "Liste des clients", url: routeHelpers.dashboard.clients.index},
-        { title: "Ajouter client", url:routeHelpers.dashboard.clients.create },
-        { title: "Groupes", url: "/clients/groups" },
+      { title: "Liste des clients", url: "/dashboard/clients" },
+      { title: "Ajouter client", url: "/dashboard/clients/create" },
+      { title: "Groupes", url: "/dashboard/groupes" },
       ],
     },
 
@@ -52,8 +51,8 @@ const data = {
       title: "Comptes",
       icon: <UserIcon />,
       items: [
-        { title: "Comptes clients", url: "/accounts" },
-        { title: "Ouvrir un compte", url: "/accounts/create" },
+        { title: "Comptes clients", url: routeHelpers.dashboard.comptes.index },
+        { title: "Ouvrir un compte", url: routeHelpers.dashboard.comptes.create },
       ],
     },
 
@@ -61,18 +60,8 @@ const data = {
       title: "Épargne",
       icon: <WalletIcon />,
       items: [
-        { title: "Dépôts", url: "/savings/deposits" },
-        { title: "Retraits", url: "/savings/withdrawals" },
-      ],
-    },
-
-    {
-      title: "Crédits",
-      icon: <BanknoteIcon />,
-      items: [
-        { title: "Demandes de crédit", url: "/loans" },
-        { title: "Accorder un crédit", url: "/loans/create" },
-        { title: "Remboursements", url: "/loans/repayments" },
+        { title: "Dépôts", url: routeHelpers.dashboard.epargne.depots.index },
+        { title: "Retraits", url: routeHelpers.dashboard.epargne.retraits.index },
       ],
     },
 
@@ -80,8 +69,8 @@ const data = {
       title: "Transactions",
       icon: <ArrowRightLeftIcon />,
       items: [
-        { title: "Historique", url: "/transactions" },
-        { title: "Transfert", url: "/transactions/transfer" },
+        { title: "Historique", url: routeHelpers.dashboard.transactions.historique.index },
+        { title: "Transfert", url: routeHelpers.dashboard.transactions.transfert.index },
       ],
     },
 
@@ -89,8 +78,8 @@ const data = {
       title: "Paiements",
       icon: <CreditCardIcon />,
       items: [
-        { title: "Paiements clients", url: "/payments" },
-        { title: "Factures", url: "/payments/invoices" },
+        { title: "Paiements clients", url: routeHelpers.dashboard.paiements.index },
+        { title: "Factures", url: routeHelpers.dashboard.paiements.factures.index },
       ],
     },
 
@@ -98,16 +87,15 @@ const data = {
       title: "Rapports",
       icon: <BarChart3Icon />,
       items: [
-        { title: "Rapport financier", url: "/reports/finance" },
-        { title: "Crédits", url: "/reports/loans" },
-        { title: "Épargne", url: "/reports/savings" },
+        { title: "Rapport financier", url: routeHelpers.dashboard.rapports.financier.index },
+        { title: "Épargne", url: routeHelpers.dashboard.rapports.epargne.index },
       ],
     },
 
-    {
+     {
       title: "Utilisateurs",
-      url: routeHelpers.dashboard.administrator.index,
-      icon: <SettingsIcon />,
+      url: "/dashboard/administrator",
+     icon: <SettingsIcon />,
     },
 
     {

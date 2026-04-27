@@ -216,7 +216,14 @@ const apiRoutes = {
                 block: "/admin/app/user/administrator/blockUser",
             },
 
-
+            clients: {
+                list: "/admin/app/clients",
+                create: "/admin/app/clients",
+                show: "/admin/app/clients",
+                update: "/admin/app/clients",
+                 delete: "/admin/app/clients",
+             },
+             
           comments:{
               list: "/admin/app/comments/pending",
               validate:"/admin/app/comments/validate",

@@ -349,7 +349,6 @@ export default function AdministratorPage() {
               </div>
             )}
           </div>
-
         </CardContent>
       </Card>
     </div>

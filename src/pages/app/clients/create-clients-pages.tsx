@@ -1,3 +1,4 @@
+import apiRoutes from "@/api/apiRoutes.ts";
 import apiService from "@/api/apiService.ts";
 import { useAuth } from "@/lib/auth.ts";
 import { useEffect, useState } from "react";
@@ -338,7 +339,7 @@ export default function CreateClientPage() {
 
       await apiService.post(
         {
-          url: ""/*apiRoutes.admin.app.clients.create*/,
+          url: apiRoutes.admin.app.clients.create,
           body: payload,
         },
         { userToken: user?.token ?? "" }
@@ -489,11 +490,11 @@ export default function CreateClientPage() {
                   Annuler
                 </Button>
                 <ButtonWithLoading
-                  type="submit"
-                  classList="min-w-[140px] bg-[var(--bluePetrol)] hover:bg-[var(--bluePetrol)]/90 text-white"
-                  title="Créer le client"
-                  loading={loadingSubmit}
-                />
+                 type="submit"
+                 classList="min-w-[140px] bg-green-700 hover:bg-green-800 text-white"
+                 title="Créer le client"
+                 loading={loadingSubmit}
+                  />
               </>
             )}
           </div>
