@@ -23,6 +23,8 @@ import HistoriquePages from "@/pages/app/transactions/historique-pages.tsx"
 import CreateTransfertPage from "@/pages/app/transactions/create-transfert-pages.tsx"
 import PaiementsListesPages from "@/pages/app/paiements/paiements-listes-pages.tsx"
 import FacturesListesPages from "@/pages/app/paiements/factures-listes-pages.tsx"
+import CreatePaiementPage from "@/pages/app/paiements/create-paiement-pages.tsx"
+import CreateFacturePage from "@/pages/app/paiements/create-facture-pages.tsx"
 import RapportFinancierPages from "@/pages/app/rapports/rapport-financier-pages.tsx"
 import RapportEpargnePages from "@/pages/app/rapports/rapport-epargne-pages.tsx"
 import GroupesPages from "@/pages/app/clients/groupes-pages.tsx"
@@ -59,6 +61,8 @@ function App() {
   <Route path="transactions/transfert" element={<CreateTransfertPage />} />
   <Route path="paiements" element={<PaiementsListesPages />} />
   <Route path="paiements/factures" element={<FacturesListesPages />} />
+  <Route path="paiements/create" element={<CreatePaiementPage />} />
+  <Route path="paiements/factures/create" element={<CreateFacturePage />} />
   <Route path="rapports/financier" element={<RapportFinancierPages />} />
   <Route path="rapports/epargne" element={<RapportEpargnePages />} />
   <Route path="administrator" element={<AdministratorPage />} />
