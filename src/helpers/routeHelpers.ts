@@ -16,6 +16,7 @@ export const routeHelpers = {
             index: "/dashboard/clients",
             create: "/dashboard/clients/create",
             show: "/dashboard/clients/detail",
+            search: "/dashboard/clients/search",
         },
 
         comptes: {

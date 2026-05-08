@@ -19,7 +19,6 @@ import {
   UserIcon,
   WalletIcon,
   ArrowRightLeftIcon,
-  CreditCardIcon,
   BarChart3Icon,
   SettingsIcon,
 } from "lucide-react"
@@ -43,7 +42,6 @@ const data = {
       items: [
       { title: "Liste des clients", url: "/dashboard/clients" },
       { title: "Ajouter client", url: "/dashboard/clients/create" },
-      { title: "Groupes", url: "/dashboard/groupes" },
       ],
     },
 
@@ -74,14 +72,6 @@ const data = {
       ],
     },
 
-    {
-      title: "Paiements",
-      icon: <CreditCardIcon />,
-      items: [
-        { title: "Paiements clients", url: routeHelpers.dashboard.paiements.index },
-        { title: "Factures", url: routeHelpers.dashboard.paiements.factures.index },
-      ],
-    },
 
     {
       title: "Rapports",

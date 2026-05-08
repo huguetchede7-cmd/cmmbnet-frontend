@@ -224,6 +224,13 @@ const apiRoutes = {
                  delete: "/admin/app/clients",
              },
              
+             comptes: {
+                list: "/admin/app/comptes",
+                create: "/admin/app/comptes",
+                show: "/admin/app/comptes",
+                byClient: "/admin/app/comptes/client",
+               },
+
           comments:{
               list: "/admin/app/comments/pending",
               validate:"/admin/app/comments/validate",

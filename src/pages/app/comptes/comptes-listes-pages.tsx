@@ -5,12 +5,13 @@ import { routeHelpers } from "@/helpers/routeHelpers.ts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WalletIcon, PlusIcon, EyeIcon } from "lucide-react";
+import apiService from "@/api/apiService.ts";
+import apiRoutes from "@/api/apiRoutes.ts";
 
 type Compte = {
   id: string;
   numero_compte: string;
-  client_nom: string;
-  client_prenom: string;
+  client: { last_name: string; first_name: string; member_number: string };
   type_compte: string;
   solde: number;
   status: string;
@@ -23,9 +24,27 @@ export default function ComptesListesPages() {
   const [comptes, setComptes] = useState<Compte[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const fetchComptes = async () => {
+    setLoading(true);
+    try {
+      const response = await apiService.get(
+        { url: apiRoutes.admin.app.comptes.list },
+        { userToken: user?.token ?? "", hasNoSuccessModal: true }
+      );
+      setComptes(response?.data?.list ?? []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComptes();
+  }, []);
+
   return (
     <div className="space-y-6 max-w-[1200px] mx-auto p-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <WalletIcon className="w-6 h-6 text-green-700" />
@@ -40,10 +59,9 @@ export default function ComptesListesPages() {
         </Button>
       </div>
 
-      {/* Tableau */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Liste des comptes</CardTitle>
+          <CardTitle className="text-base">Liste des comptes ({comptes.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -68,10 +86,12 @@ export default function ComptesListesPages() {
                   {comptes.map((compte) => (
                     <tr key={compte.id} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4 font-medium">{compte.numero_compte}</td>
-                      <td className="py-3 px-4">{compte.client_nom} {compte.client_prenom}</td>
+                      <td className="py-3 px-4">
+                        {compte.client?.last_name} {compte.client?.first_name}
+                      </td>
                       <td className="py-3 px-4">{compte.type_compte}</td>
                       <td className="py-3 px-4 font-medium text-green-700">
-                        {compte.solde.toLocaleString()} FCFA
+                        {Number(compte.solde).toLocaleString()} FCFA
                       </td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${

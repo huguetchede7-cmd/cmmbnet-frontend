@@ -18,12 +18,6 @@ import { User, MapPin, CreditCard, FileText } from "lucide-react";
 import z from "zod/v3"
 import { routeHelpers } from "@/helpers/routeHelpers.ts"
 
-// Types
-type AccountType = {
-  id: string;
-  name: string;
-};
-
 type IdDocumentType = {
   id: string;
   name: string;
@@ -34,16 +28,9 @@ export default function CreateClientPage() {
   const navigate = useNavigate();
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [accountTypes, setAccountTypes] = useState<AccountType[]>([]);
-
   const genderOptions = [
     { id: "M", name: "Masculin" },
     { id: "F", name: "Féminin" },
-  ];
-
-  const statusOptions = [
-    { id: "active", name: "Actif" },
-    { id: "inactive", name: "Inactif" },
   ];
 
   const idDocumentOptions: IdDocumentType[] = [
@@ -52,13 +39,6 @@ export default function CreateClientPage() {
     { id: "permis", name: "Permis de conduire" },
     { id: "carte_consulaire", name: "Carte consulaire" },
     { id: "acte_naissance", name: "Acte de naissance" },
-  ];
-
-  const accountTypeOptions: AccountType[] = [
-    { id: "epargne_ordinaire", name: "Épargne ordinaire" },
-    { id: "epargne_terme", name: "Épargne à terme" },
-    { id: "courant", name: "Compte courant" },
-    { id: "joint", name: "Compte joint" },
   ];
 
   // Informations personnelles
@@ -97,6 +77,22 @@ export default function CreateClientPage() {
       })),
       size: "col-span-6",
       required: true,
+    },
+    {
+      tag: "profession",
+      label: "Profession / Activité",
+      input_type: "text",
+      size: "col-span-6",
+      placeholder: "Ex: Commerçant, Agriculteur...",
+      required: false,
+    },
+    {
+      tag: "photo",
+      label: "Photo du client",
+      input_type: "file",
+      size: "col-span-6",
+      accepts: "image/jpeg,image/png",
+      required: false,
     },
   ];
 
@@ -154,46 +150,22 @@ export default function CreateClientPage() {
 
   // Informations d'adhésion
   const membershipFields: FieldOption[] = [
-    {
-      tag: "member_number",
-      label: "Numéro de membre",
-      input_type: "text",
-      size: "col-span-6",
-      placeholder: "Généré automatiquement",
-      required: false,
-    },
-    {
-      tag: "join_date",
-      label: "Date d'adhésion",
-      input_type: "date",
-      size: "col-span-6",
-      required: true,
-    },
-    {
-      tag: "account_type",
-      label: "Type de compte",
-      input_type: "select",
-      placeholder: "Sélectionnez un type de compte",
-      options: accountTypeOptions.map((t) => ({
-        value: t.id,
-        label: t.name,
-      })),
-      size: "col-span-6",
-      required: true,
-    },
-    {
-      tag: "status",
-      label: "Statut",
-      input_type: "select",
-      placeholder: "Sélectionnez le statut",
-      options: statusOptions.map((s) => ({
-        value: s.id,
-        label: s.name,
-      })),
-      size: "col-span-6",
-      required: true,
-    },
-  ];
+  {
+    tag: "member_number",
+    label: "Numéro de membre",
+    input_type: "text",
+    size: "col-span-6",
+    placeholder: "Généré automatiquement",
+    required: false,
+  },
+  {
+    tag: "join_date",
+    label: "Date d'adhésion",
+    input_type: "date",
+    size: "col-span-6",
+    required: true,
+  },
+];
 
   // Pièce d'identité
   const identityFields: FieldOption[] = [
@@ -234,6 +206,8 @@ export default function CreateClientPage() {
     gender: z
       .string()
       .min(1, "Le sexe est obligatoire"),
+    profession: z.string().optional(),
+    photo: z.any().optional(),
 
     // Coordonnées
     address: z
@@ -262,12 +236,6 @@ export default function CreateClientPage() {
     join_date: z
       .string()
       .min(1, "La date d'adhésion est obligatoire"),
-    account_type: z
-      .string()
-      .min(1, "Le type de compte est obligatoire"),
-    status: z
-      .string()
-      .min(1, "Le statut est obligatoire"),
 
     // Pièce d'identité
     id_document_type: z
@@ -283,6 +251,8 @@ export default function CreateClientPage() {
     first_name: "",
     birth_date: "",
     gender: "",
+    profession: "",
+    photo: null,
     address: "",
     neighborhood: "",
     district: "",
@@ -291,8 +261,6 @@ export default function CreateClientPage() {
     secondary_phone: "",
     member_number: "",
     join_date: new Date().toISOString().split('T')[0], // Date du jour par défaut
-    account_type: "",
-    status: "active",
     id_document_type: "",
     id_document_number: "",
   };
@@ -318,6 +286,7 @@ export default function CreateClientPage() {
         first_name: values.first_name,
         birth_date: values.birth_date,
         gender: values.gender,
+        profession: values.profession || undefined,
        
         // Coordonnées
         address: values.address,
@@ -329,24 +298,28 @@ export default function CreateClientPage() {
        
         // Informations d'adhésion
         join_date: values.join_date,
-        account_type: values.account_type,
-        status: values.status,
        
         // Pièce d'identité
         id_document_type: values.id_document_type,
         id_document_number: values.id_document_number,
       };
+ 
 
-      await apiService.post(
-        {
-          url: apiRoutes.admin.app.clients.create,
-          body: payload,
-        },
-        { userToken: user?.token ?? "" }
+        const response = await apiService.post(
+    {
+        url: apiRoutes.admin.app.clients.create,
+        body: payload,
+      },
+      { userToken: user?.token ?? "" }
       );
 
-      resetForm();
-      navigate(routeHelpers.dashboard.clients.index);
+
+console.log("response:", JSON.stringify(response));
+resetForm();
+const clientId = response?.data?.id;
+navigate(`${routeHelpers.dashboard.comptes.create}?client_id=${clientId}`);
+
+
     } catch (error) {
       if (error instanceof Error) {
         apiService.handleError(error.message, { form });
@@ -424,10 +397,10 @@ export default function CreateClientPage() {
           ) : (
             <>
               <h1 className="text-2xl font-bold tracking-tight">
-                Nouveau client
+                Enrégistrement d'un client
               </h1>
               <p className="text-sm text-muted-foreground pt-1">
-                Créer un nouveau dossier client avec toutes les informations requises.
+                Enrégistrer un nouveau dossier client avec toutes les informations requises.
               </p>
             </>
           )}
@@ -483,16 +456,16 @@ export default function CreateClientPage() {
                   variant="outline"
                   className="min-w-[120px]"
                   onClick={() => {
-                    resetForm();
-                    navigate(routeHelpers.dashboard.clients.index);
-                  }}
+                  resetForm();
+                  navigate(routeHelpers.dashboard.clients.index);
+                   }}
                 >
                   Annuler
                 </Button>
                 <ButtonWithLoading
                  type="submit"
                  classList="min-w-[140px] bg-green-700 hover:bg-green-800 text-white"
-                 title="Créer le client"
+                 title="Enrégistrer le client"
                  loading={loadingSubmit}
                   />
               </>

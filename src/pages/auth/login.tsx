@@ -57,7 +57,7 @@ export function LoginPage() {
         <div className="flex w-full max-w-sm flex-col gap-6">
           <a href="#" className="flex items-center gap-2 self-center font-medium">
             <h2 className="text-primary font-bold leading-tight tracking-tighter text-2xl">
-              CMMB MICROFINANCE
+              MICROFINANCE
             </h2>
           </a>
           <div className={cn("flex flex-col gap-6")}>

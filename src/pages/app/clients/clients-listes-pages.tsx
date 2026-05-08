@@ -1,12 +1,13 @@
-import apiRoutes from "@/api/apiRoutes.ts";
 import { useAuth } from "@/lib/auth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { routeHelpers } from "@/helpers/routeHelpers.ts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UsersIcon, PlusIcon, EyeIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { UsersIcon, PlusIcon, EyeIcon, SearchIcon } from "lucide-react";
 import apiService from "@/api/apiService.ts";
+import apiRoutes from "@/api/apiRoutes.ts";
 
 type Client = {
   id: string;
@@ -17,24 +18,29 @@ type Client = {
   account_type: string;
   status: string;
   join_date: string;
+  member_number: string;
 };
 
 export default function ClientsListesPages() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [search, setSearch] = useState("");
 
-  const fetchClients = async () => {
+  const fetchClients = async (searchTerm = "") => {
     setLoading(true);
     try {
+      const url = searchTerm
+        ? `${apiRoutes.admin.app.clients.list}?search=${searchTerm}`
+        : apiRoutes.admin.app.clients.list;
       const response = await apiService.get(
-     { url: apiRoutes.admin.app.clients.list },
-     { userToken: user?.token ?? "" }
-     );
+        { url },
+        { userToken: user?.token ?? "", hasNoSuccessModal: true }
+      );
       setClients(response?.data?.list ?? []);
     } catch (error) {
-      console.error("Erreur chargement clients", error);
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -43,6 +49,10 @@ export default function ClientsListesPages() {
   useEffect(() => {
     fetchClients();
   }, []);
+
+  const handleSearch = () => {
+    fetchClients(search);
+  };
 
   return (
     <div className="space-y-6 max-w-[1200px] mx-auto p-6">
@@ -61,10 +71,29 @@ export default function ClientsListesPages() {
         </Button>
       </div>
 
+      {/* Barre de recherche */}
+      <div className="flex gap-3">
+        <Input
+          placeholder="Nom, prénom ou numéro de téléphone..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          className="max-w-lg"
+        />
+        <Button
+          onClick={handleSearch}
+          variant="outline"
+          disabled={loading}
+        >
+          <SearchIcon className="w-4 h-4 mr-2" />
+          Rechercher
+        </Button>
+      </div>
+
       {/* Tableau */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Liste des clients</CardTitle>
+          <CardTitle className="text-base">Liste des clients ({clients.length})</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -76,39 +105,41 @@ export default function ClientsListesPages() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
+                    <th className="py-3 px-4">N° Membre</th>
                     <th className="py-3 px-4">Nom</th>
                     <th className="py-3 px-4">Téléphone</th>
                     <th className="py-3 px-4">Ville</th>
                     <th className="py-3 px-4">Type de compte</th>
                     <th className="py-3 px-4">Statut</th>
-                    <th className="py-3 px-4">Date d'adhésion</th>
                     <th className="py-3 px-4">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {clients.map((client) => (
-                    <tr key={client.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium">
-                        {client.last_name} {client.first_name}
-                      </td>
+                    <tr 
+  key={client.id} 
+  className="border-b hover:bg-gray-50 cursor-pointer"
+  onClick={() => navigate(`/dashboard/clients/detail/${client.id}`)}
+>
+                      <td className="py-3 px-4 font-medium">{client.member_number}</td>
+                      <td className="py-3 px-4">{client.last_name} {client.first_name}</td>
                       <td className="py-3 px-4">{client.primary_phone}</td>
                       <td className="py-3 px-4">{client.city}</td>
                       <td className="py-3 px-4">{client.account_type}</td>
                       <td className="py-3 px-4">
-                        <span className= {`px-2 py-1 rounded-full text-xs font-medium ${
-                          client.status === "active"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          client.status === "Active" || client.status === "active"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
                         }`}>
-                          {client.status === "active" ? "Actif" : "Inactif"}
+                          {client.status === "Active" || client.status === "active" ? "Actif" : "Inactif"}
                         </span>
                       </td>
-                      <td className="py-3 px-4">{client.join_date}</td>
                       <td className="py-3 px-4">
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => navigate(`${routeHelpers.dashboard.clients.show}/${client.id}`)}
+                           onClick={() => navigate(`/dashboard/clients/detail/${client.id}`)}
                         >
                           <EyeIcon className="w-4 h-4" />
                         </Button>
