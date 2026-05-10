@@ -20,10 +20,11 @@ export const routeHelpers = {
         },
 
         comptes: {
-            index: "/dashboard/comptes",
-            create: "/dashboard/comptes/create",
-            show: "/dashboard/comptes/detail",
-        },
+    index: "/dashboard/comptes",
+    create: "/dashboard/comptes/create",
+    show: "/dashboard/comptes/detail",
+    detail: "/dashboard/comptes/detail",
+},
 
         groupes: {
             index: "/dashboard/groupes",

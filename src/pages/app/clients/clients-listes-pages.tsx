@@ -15,7 +15,7 @@ type Client = {
   first_name: string;
   primary_phone: string;
   city: string;
-  account_type: string;
+  nombre_comptes: number;
   status: string;
   join_date: string;
   member_number: string;
@@ -109,7 +109,7 @@ export default function ClientsListesPages() {
                     <th className="py-3 px-4">Nom</th>
                     <th className="py-3 px-4">Téléphone</th>
                     <th className="py-3 px-4">Ville</th>
-                    <th className="py-3 px-4">Type de compte</th>
+                    <th className="py-3 px-4">Comptes</th>
                     <th className="py-3 px-4">Statut</th>
                     <th className="py-3 px-4">Actions</th>
                   </tr>
@@ -125,7 +125,7 @@ export default function ClientsListesPages() {
                       <td className="py-3 px-4">{client.last_name} {client.first_name}</td>
                       <td className="py-3 px-4">{client.primary_phone}</td>
                       <td className="py-3 px-4">{client.city}</td>
-                      <td className="py-3 px-4">{client.account_type}</td>
+                      <td className="py-3 px-4">{client.nombre_comptes}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           client.status === "Active" || client.status === "active"

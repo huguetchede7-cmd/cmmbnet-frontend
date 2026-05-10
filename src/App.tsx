@@ -23,6 +23,7 @@ import HistoriquePages from "@/pages/app/transactions/historique-pages.tsx"
 import CreateTransfertPage from "@/pages/app/transactions/create-transfert-pages.tsx"
 import RapportFinancierPages from "@/pages/app/rapports/rapport-financier-pages.tsx"
 import RapportEpargnePages from "@/pages/app/rapports/rapport-epargne-pages.tsx"
+import DetailComptePage from "@/pages/app/comptes/detail-compte-pages.tsx"
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
   <Route path="clients/detail/:id" element={<DetailClientPages />} />
   <Route path="comptes" element={<ComptesListesPages />} />
   <Route path="comptes/create" element={<CreateComptePage />} />
+  <Route path="comptes/detail/:id" element={<DetailComptePage />} />
   <Route path="epargne/depots" element={<DepotsListesPages />} />
   <Route path="epargne/depots/create" element={<CreateDepotPage />} />
   <Route path="epargne/retraits" element={<RetraitsListesPages />} />

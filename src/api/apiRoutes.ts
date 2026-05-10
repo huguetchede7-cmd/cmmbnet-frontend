@@ -229,6 +229,18 @@ const apiRoutes = {
                 create: "/admin/app/comptes",
                 show: "/admin/app/comptes",
                 byClient: "/admin/app/comptes/client",
+               }, 
+
+               depots: {
+                list: "/admin/app/depots",
+                create: "/admin/app/depots",
+                byCompte: "/admin/app/depots/compte",
+                },
+
+               retraits: {
+               list: "/admin/app/retraits",
+               create: "/admin/app/retraits",
+               byCompte: "/admin/app/retraits/compte",
                },
 
           comments:{

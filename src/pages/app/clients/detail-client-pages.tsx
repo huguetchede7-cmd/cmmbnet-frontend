@@ -223,8 +223,11 @@ export default function DetailClientPages() {
                   </thead>
                   <tbody>
                     {comptes.map((compte) => (
-                      <tr key={compte.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium">{compte.numero_compte}</td>
+<tr 
+  key={compte.id} 
+  className="border-b hover:bg-gray-50 cursor-pointer"
+  onClick={() => navigate(`/dashboard/comptes/detail/${compte.id}`)}
+>                        <td className="py-3 px-4 font-medium">{compte.numero_compte}</td>
                         <td className="py-3 px-4">{compte.type_compte}</td>
                         <td className="py-3 px-4 font-medium text-green-700">
                           {Number(compte.solde).toLocaleString()} FCFA
