@@ -1,38 +1,238 @@
+import { useAuth } from "@/lib/auth";
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UsersIcon, WalletIcon, TrendingUpIcon, TrendingDownIcon, BarChart3Icon } from "lucide-react";
+import apiService from "@/api/apiService.ts";
+import apiRoutes from "@/api/apiRoutes.ts";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ClockIcon } from "lucide-react"
+type Stats = {
+  total_clients: number;
+  total_comptes: number;
+  total_depots: number;
+  total_retraits: number;
+  depots_aujourdhui: number;
+  retraits_aujourdhui: number;
+  derniers_depots: Array<{
+    id: string;
+    numero_transaction: string;
+    montant: number;
+    date_depot: string;
+    mode_paiement: string;
+  }>;
+  derniers_retraits: Array<{
+    id: string;
+    numero_transaction: string;
+    montant: number;
+    date_retrait: string;
+    mode_paiement: string;
+  }>;
+};
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStats = async () => {
+    setLoading(true);
+    try {
+      const response = await apiService.get(
+        { url: apiRoutes.admin.app.dashboard.stats },
+        { userToken: user?.token ?? "", hasNoSuccessModal: true }
+      );
+      setStats(response?.data ?? null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-[70vh] p-6">
-      <Card className="max-w-md w-full text-center shadow-sm">
+    <div className="space-y-6 max-w-[1400px] mx-auto p-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Tableau de bord</h1>
+        <p className="text-sm text-muted-foreground pt-1">
+          Vue d'ensemble de la plateforme Microfinance CMMB
+        </p>
+      </div>
 
-        <CardHeader className="flex flex-col items-center gap-3">
-          <ClockIcon className="h-10 w-10 text-primary" />
+      {loading ? (
+        <p className="text-sm text-muted-foreground">Chargement des statistiques...</p>
+      ) : (
+        <>
+          {/* Statistiques principales */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <UsersIcon className="w-6 h-6 text-green-700" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total clients</p>
+                    <p className="text-3xl font-bold text-green-700">{stats?.total_clients ?? 0}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <Badge variant="secondary">
-            En développement
-          </Badge>
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-blue-100 rounded-lg">
+                    <WalletIcon className="w-6 h-6 text-blue-700" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total comptes</p>
+                    <p className="text-3xl font-bold text-blue-700">{stats?.total_comptes ?? 0}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <CardTitle className="text-2xl">
-            Bientôt disponible
-          </CardTitle>
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-purple-100 rounded-lg">
+                    <BarChart3Icon className="w-6 h-6 text-purple-700" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total épargne</p>
+                    <p className="text-2xl font-bold text-purple-700">
+                      {Number(stats?.total_depots ?? 0).toLocaleString()} FCFA
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-          <CardDescription>
-            Cette fonctionnalité sera bientôt disponible dans votre application.
-          </CardDescription>
-        </CardHeader>
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-green-100 rounded-lg">
+                    <TrendingUpIcon className="w-6 h-6 text-green-700" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Dépôts aujourd'hui</p>
+                    <p className="text-2xl font-bold text-green-700">
+                      +{Number(stats?.depots_aujourdhui ?? 0).toLocaleString()} FCFA
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Nous travaillons actuellement sur cette section pour améliorer
-            votre système de gestion de poissonnerie.
-          </p>
-        </CardContent>
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-red-100 rounded-lg">
+                    <TrendingDownIcon className="w-6 h-6 text-red-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Retraits aujourd'hui</p>
+                    <p className="text-2xl font-bold text-red-600">
+                      -{Number(stats?.retraits_aujourdhui ?? 0).toLocaleString()} FCFA
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-      </Card>
+            <Card className="border border-gray-200 shadow-none">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-orange-100 rounded-lg">
+                    <WalletIcon className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Total retraits</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      {Number(stats?.total_retraits ?? 0).toLocaleString()} FCFA
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Dernières transactions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Derniers dépôts */}
+            <Card className="border border-gray-200 shadow-none">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <TrendingUpIcon className="w-4 h-4 text-green-700" />
+                  Derniers dépôts
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {stats?.derniers_depots?.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Aucun dépôt.</p>
+                ) : (
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-muted-foreground">
+                        <th className="py-2 px-2">N° Transaction</th>
+                        <th className="py-2 px-2">Montant</th>
+                        <th className="py-2 px-2">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stats?.derniers_depots?.map((depot) => (
+                        <tr key={depot.id} className="border-b hover:bg-gray-50">
+                          <td className="py-2 px-2 font-medium">{depot.numero_transaction}</td>
+                          <td className="py-2 px-2 text-green-700 font-medium">+{Number(depot.montant).toLocaleString()} FCFA</td>
+                          <td className="py-2 px-2">{depot.date_depot}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Derniers retraits */}
+            <Card className="border border-gray-200 shadow-none">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold flex items-center gap-2">
+                  <TrendingDownIcon className="w-4 h-4 text-red-600" />
+                  Derniers retraits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {stats?.derniers_retraits?.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Aucun retrait.</p>
+                ) : (
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b text-left text-muted-foreground">
+                        <th className="py-2 px-2">N° Transaction</th>
+                        <th className="py-2 px-2">Montant</th>
+                        <th className="py-2 px-2">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stats?.derniers_retraits?.map((retrait) => (
+                        <tr key={retrait.id} className="border-b hover:bg-gray-50">
+                          <td className="py-2 px-2 font-medium">{retrait.numero_transaction}</td>
+                          <td className="py-2 px-2 text-red-600 font-medium">-{Number(retrait.montant).toLocaleString()} FCFA</td>
+                          <td className="py-2 px-2">{retrait.date_retrait}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 }
-

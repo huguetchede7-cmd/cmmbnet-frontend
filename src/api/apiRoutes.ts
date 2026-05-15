@@ -3,8 +3,6 @@ const apiRoutes = {
         auth: {
             login: "/admin/auth/login",
         },
-
-
         app: {
             accounts: {
                 stats: "/admin/app/accounts/stats",
@@ -14,7 +12,6 @@ const apiRoutes = {
                 createDeliverer: "/admin/app/accounts/create/deliverer",
                 createBusiness: "/admin/app/accounts/create/business",
             },
-
             dashboard: {
                 stats: "/admin/app/dashboard/stats",
                 order: "/admin/app/reports/orders",
@@ -23,15 +20,10 @@ const apiRoutes = {
                 stats_users: "/admin/app/reports/users",
                 pendingRequests: "/admin/app/reports/pending-requests",
             },
-
-
             profile: {
                 detail: "/admin/app/detail",
                 logout: "/admin/app/auth/logout"
             },
-
-
-
             bannersImages: {
                 list: "/admin/app/banners",
                 create: "/admin/app/banners/create",
@@ -177,12 +169,10 @@ const apiRoutes = {
                 update: "/admin/app/accessories-categories",
                 delete: "/admin/app/accessories-categories",
             },
-
             superCategories: {
                 list: "/admin/app/super-categories",
                 update: (id: number) => `/admin/app/super-categories/${id}`
             },
-
             orders: {
                 index: "/admin/app/orders",
                 list: "/admin/app/orders?page=1",
@@ -193,7 +183,6 @@ const apiRoutes = {
                 updateStatus: "/admin/app/orders/change-status",
                 statistics: "/admin/app/orders/statistics",
                 listByUser: "/admin/app/orders/user",
-
             },
             users: {
                 list: "/admin/app/users",
@@ -215,7 +204,6 @@ const apiRoutes = {
                 unblock: "/admin/app/user/administrator/unblockUser",
                 block: "/admin/app/user/administrator/blockUser",
             },
-
             clients: {
                 list: "/admin/app/clients",
                 create: "/admin/app/clients",
@@ -223,41 +211,33 @@ const apiRoutes = {
                 update: "/admin/app/clients",
                  delete: "/admin/app/clients",
              },
-             
              comptes: {
                 list: "/admin/app/comptes",
                 create: "/admin/app/comptes",
                 show: "/admin/app/comptes",
                 byClient: "/admin/app/comptes/client",
                }, 
-
                depots: {
                 list: "/admin/app/depots",
                 create: "/admin/app/depots",
                 byCompte: "/admin/app/depots/compte",
                 },
-
                retraits: {
                list: "/admin/app/retraits",
                create: "/admin/app/retraits",
                byCompte: "/admin/app/retraits/compte",
                },
-
           comments:{
               list: "/admin/app/comments/pending",
               validate:"/admin/app/comments/validate",
               rejected:"/admin/app/comments/rejet",
               valid_by_user:"/admin/app/comments/by-user",
           },
-
            settings: {
              index: "/admin/app/dynamic-settings",
              update: "/admin/app/dynamic-settings",
            }
-
         },
-
-
         utils: {
             resetPasswordInit: "/utils/password/reset/init",
             resetPassword: "/utils/password/reset",
@@ -268,13 +248,10 @@ const apiRoutes = {
                 stats: "/utils/app/notifications/stats",
                 list: "/utils/app/notifications/list"
             },
-
             accessoriesCategories: {
                 list: "/public/accessories-categories"
             },
-
         },
-
         public: {
             passwordUpdate: "/public/app/password/edit"
         }
