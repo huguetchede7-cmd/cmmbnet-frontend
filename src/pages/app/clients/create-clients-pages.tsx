@@ -88,7 +88,7 @@ export default function CreateClientPage() {
     },
     {
       tag: "photo",
-      label: "Photo du client",
+      label: "Photo du membre",
       input_type: "file",
       size: "col-span-6",
       accepts: "image/jpeg,image/png",
@@ -284,7 +284,9 @@ export default function CreateClientPage() {
         // Informations personnelles
         last_name: values.last_name,
         first_name: values.first_name,
-        birth_date: values.birth_date,
+        birth_date: values.birth_date
+        ? new Date(values.birth_date + 'T12:00:00').toISOString().split('T')[0]
+        : null,
         gender: values.gender,
         profession: values.profession || undefined,
        
@@ -312,7 +314,6 @@ export default function CreateClientPage() {
       },
       { userToken: user?.token ?? "" }
       );
-
 
 console.log("response:", JSON.stringify(response));
 resetForm();
@@ -397,10 +398,10 @@ navigate(`${routeHelpers.dashboard.comptes.create}?client_id=${clientId}`);
           ) : (
             <>
               <h1 className="text-2xl font-bold tracking-tight">
-                Enrégistrement d'un client
+                Enrégistrement d'un membre
               </h1>
               <p className="text-sm text-muted-foreground pt-1">
-                Enrégistrer un nouveau dossier client avec toutes les informations requises.
+                Enrégistrer un nouveau dossier membre avec toutes les informations requises.
               </p>
             </>
           )}
@@ -465,7 +466,7 @@ navigate(`${routeHelpers.dashboard.comptes.create}?client_id=${clientId}`);
                 <ButtonWithLoading
                  type="submit"
                  classList="min-w-[140px] bg-green-700 hover:bg-green-800 text-white"
-                 title="Enrégistrer le client"
+                 title="Enrégistrer le membre"
                  loading={loadingSubmit}
                   />
               </>

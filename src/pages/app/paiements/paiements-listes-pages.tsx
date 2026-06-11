@@ -28,7 +28,7 @@ export default function PaiementsListesPages() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <CreditCardIcon className="w-6 h-6 text-green-700" />
-          <h1 className="text-2xl font-bold tracking-tight">Paiements clients</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Paiements membres</h1>
         </div>
         <Button
           onClick={() => navigate(routeHelpers.dashboard.paiements.create)}
@@ -54,7 +54,7 @@ export default function PaiementsListesPages() {
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
                     <th className="py-3 px-4">N° Paiement</th>
-                    <th className="py-3 px-4">Client</th>
+                    <th className="py-3 px-4">Membre</th>
                     <th className="py-3 px-4">Montant</th>
                     <th className="py-3 px-4">Mode</th>
                     <th className="py-3 px-4">Date</th>

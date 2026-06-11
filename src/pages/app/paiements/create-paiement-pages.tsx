@@ -139,7 +139,7 @@ export default function CreatePaiementPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Nouveau paiement</h1>
         <p className="text-sm text-muted-foreground pt-1">
-          Enregistrer un nouveau paiement client.
+          Enregistrer un nouveau paiement membre.
         </p>
       </div>
 
@@ -150,7 +150,7 @@ export default function CreatePaiementPage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <UserIcon className="w-4 h-4 text-green-700" />
-                Identification du client
+                Identification du membre
               </CardTitle>
             </CardHeader>
             <CardContent>

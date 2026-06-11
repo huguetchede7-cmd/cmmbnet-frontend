@@ -17,6 +17,7 @@ export const routeHelpers = {
             create: "/dashboard/clients/create",
             show: "/dashboard/clients/detail",
             search: "/dashboard/clients/search",
+            edit: "/dashboard/clients/edit",
         },
 
         comptes: {
@@ -79,8 +80,7 @@ export const routeHelpers = {
             },
           },
 
-          
-
+        
     composeWithQueries: (url: string, queries: { [key: string]: string | number }) => {
         const searchParams = new URLSearchParams();
         Object.entries(queries).forEach(([key, value]) => {

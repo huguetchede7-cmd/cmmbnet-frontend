@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, FileTextIcon, ArrowLeftIcon, WalletIcon } from "lucide-react";
+import { UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, FileTextIcon, ArrowLeftIcon, WalletIcon, Trash2Icon } from "lucide-react";
 import apiService from "@/api/apiService.ts";
 import apiRoutes from "@/api/apiRoutes.ts";
 import { routeHelpers } from "@/helpers/routeHelpers.ts";
@@ -43,11 +43,20 @@ const isActive = (status: string) => status === "active" || status === "Active";
 
 export default function DetailClientPages() {
   const { user } = useAuth();
+  const isAdmin = ((user as any)?.roles ?? []).some((r: any) => r?.slug === 'admin');
+  const isSavingsOfficer = ((user as any)?.roles ?? []).some((r: any) => r?.slug === 'savings_officer');
+  const canEdit = isAdmin || isSavingsOfficer;
+  const canDelete = isAdmin;
   const navigate = useNavigate();
   const { id } = useParams();
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [comptes, setComptes] = useState<Compte[]>([]);
+
+  // États pour le modal de suppression de compte
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [compteToDelete, setCompteToDelete] = useState<Compte | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchClient = async () => {
     setLoading(true);
@@ -81,21 +90,57 @@ export default function DetailClientPages() {
     fetchComptes();
   }, [id]);
 
+  // Ouvrir le modal
+  const openDeleteModal = (e: React.MouseEvent, compte: Compte) => {
+    e.stopPropagation();
+    setCompteToDelete(compte);
+    setShowDeleteModal(true);
+  };
+
+  // Confirmer la suppression du compte
+  const handleDeleteConfirm = async () => {
+    if (!compteToDelete) return;
+    setDeleting(true);
+    try {
+      await apiService.delete(
+        { url: `${apiRoutes.admin.app.comptes.list}/${compteToDelete.id}` },
+        { userToken: user?.token ?? "" }
+      );
+      setShowDeleteModal(false);
+      setCompteToDelete(null);
+      fetchComptes(); // Recharger la liste des comptes
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   if (loading) return <p className="p-6 text-sm text-muted-foreground">Chargement...</p>;
-  if (!client) return <p className="p-6 text-sm text-muted-foreground">Client introuvable.</p>;
+  if (!client) return <p className="p-6 text-sm text-muted-foreground">Membre introuvable.</p>;
 
   return (
     <div className="space-y-6 max-w-[1200px] mx-auto p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Button variant="outline" size="sm" onClick={() => navigate(routeHelpers.dashboard.clients.index)}>
-            <ArrowLeftIcon className="w-4 h-4 mr-2" />
-            Retour
-          </Button>
-          <h1 className="text-2xl font-bold tracking-tight">
-            {client.last_name} {client.first_name}
-          </h1>
+  <Button variant="outline" size="sm" onClick={() => navigate(routeHelpers.dashboard.clients.index)}>
+    <ArrowLeftIcon className="w-4 h-4 mr-2" />
+    Retour
+  </Button>
+  {canEdit && (
+    <Button
+      variant="outline"
+      size="sm"
+      className="text-green-700 border-green-300 hover:bg-green-50"
+      onClick={() => navigate(`/dashboard/clients/edit/${client.id}`)}
+    >
+      Modifier
+    </Button>
+  )}
+  <h1 className="text-2xl font-bold tracking-tight">
+    {client.last_name} {client.first_name}
+  </h1>
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
             isActive(client.status)
               ? "bg-green-100 text-green-700"
@@ -106,14 +151,13 @@ export default function DetailClientPages() {
         </div>
       </div>
 
-            <Button
-             className="bg-green-700 hover:bg-green-800 text-white"
-             onClick={() => navigate(`${routeHelpers.dashboard.comptes.create}?client_id=${client.id}`)}
-              >
-              <WalletIcon className="w-4 h-4 mr-2" />
-              Ouvrir un compte
-              </Button>
-
+      <Button
+        className="bg-green-700 hover:bg-green-800 text-white"
+        onClick={() => navigate(`${routeHelpers.dashboard.comptes.create}?client_id=${client.id}`)}
+      >
+        <WalletIcon className="w-4 h-4 mr-2" />
+        Ouvrir un compte
+      </Button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -198,7 +242,7 @@ export default function DetailClientPages() {
           </CardContent>
         </Card>
 
-        {/* Comptes du client */}
+        {/* Comptes du membre */}
         <Card className="border border-gray-200 shadow-none md:col-span-2">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -219,15 +263,19 @@ export default function DetailClientPages() {
                       <th className="py-3 px-4">Solde</th>
                       <th className="py-3 px-4">Statut</th>
                       <th className="py-3 px-4">Date d'ouverture</th>
+                      {canDelete && (
+                        <th className="py-3 px-4">Actions</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
                     {comptes.map((compte) => (
-<tr 
-  key={compte.id} 
-  className="border-b hover:bg-gray-50 cursor-pointer"
-  onClick={() => navigate(`/dashboard/comptes/detail/${compte.id}`)}
->                        <td className="py-3 px-4 font-medium">{compte.numero_compte}</td>
+                      <tr
+                        key={compte.id}
+                        className="border-b hover:bg-gray-50 cursor-pointer"
+                        onClick={() => navigate(`/dashboard/comptes/detail/${compte.id}`)}
+                      >
+                        <td className="py-3 px-4 font-medium">{compte.numero_compte}</td>
                         <td className="py-3 px-4">{compte.type_compte}</td>
                         <td className="py-3 px-4 font-medium text-green-700">
                           {Number(compte.solde).toLocaleString()} FCFA
@@ -242,6 +290,18 @@ export default function DetailClientPages() {
                           </span>
                         </td>
                         <td className="py-3 px-4">{compte.date_ouverture}</td>
+                        {canDelete && (
+                          <td className="py-3 px-4">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+                              onClick={(e) => openDeleteModal(e, compte)}
+                            >
+                              <Trash2Icon className="w-4 h-4" />
+                            </Button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -252,6 +312,42 @@ export default function DetailClientPages() {
         </Card>
 
       </div>
+
+      {/* Modal de confirmation suppression compte */}
+      {showDeleteModal && compteToDelete && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <h2 className="text-lg font-bold mb-2">Confirmer la suppression</h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              Vous êtes sur le point de supprimer le compte{" "}
+              <span className="font-semibold text-black">
+                {compteToDelete.numero_compte}
+              </span>{" "}
+              ({compteToDelete.type_compte}). Cette action est irréversible.
+            </p>
+            <div className="flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setCompteToDelete(null);
+                }}
+                disabled={deleting}
+              >
+                Annuler
+              </Button>
+              <Button
+                className="bg-red-600 hover:bg-red-700 text-white"
+                onClick={handleDeleteConfirm}
+                disabled={deleting}
+              >
+                {deleting ? "Suppression..." : "Supprimer"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

@@ -54,7 +54,7 @@ export default function FacturesListesPages() {
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
                     <th className="py-3 px-4">N° Facture</th>
-                    <th className="py-3 px-4">Client</th>
+                    <th className="py-3 px-4">Membre</th>
                     <th className="py-3 px-4">Montant</th>
                     <th className="py-3 px-4">Date émission</th>
                     <th className="py-3 px-4">Date échéance</th>

@@ -117,7 +117,7 @@ export default function CreateFacturePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Nouvelle facture</h1>
         <p className="text-sm text-muted-foreground pt-1">
-          Créer une nouvelle facture pour un client.
+          Créer une nouvelle facture pour un membre.
         </p>
       </div>
 
@@ -128,7 +128,7 @@ export default function CreateFacturePage() {
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold flex items-center gap-2">
                 <UserIcon className="w-4 h-4 text-green-700" />
-                Identification du client
+                Identification du membre
               </CardTitle>
             </CardHeader>
             <CardContent>

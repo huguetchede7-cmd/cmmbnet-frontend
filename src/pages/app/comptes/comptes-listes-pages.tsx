@@ -74,7 +74,7 @@ export default function ComptesListesPages() {
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
                     <th className="py-3 px-4">N° Compte</th>
-                    <th className="py-3 px-4">Client</th>
+                    <th className="py-3 px-4">Membre</th>
                     <th className="py-3 px-4">Type</th>
                     <th className="py-3 px-4">Solde</th>
                     <th className="py-3 px-4">Statut</th>

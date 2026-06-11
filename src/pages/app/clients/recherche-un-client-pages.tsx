@@ -58,9 +58,9 @@ export default function RechercheClientPages() {
     <div className="space-y-6 max-w-[1200px] mx-auto p-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Rechercher un client</h1>
+        <h1 className="text-2xl font-bold tracking-tight">Rechercher un membre</h1>
         <p className="text-sm text-muted-foreground pt-1">
-          Tapez le nom, prénom ou téléphone du client.
+          Tapez le nom, prénom ou téléphone du membre.
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export default function RechercheClientPages() {
 
       {/* Résultats */}
       {searched && clients.length === 0 && !loading && (
-        <p className="text-sm text-muted-foreground">Aucun client trouvé.</p>
+        <p className="text-sm text-muted-foreground">Aucun membre trouvé.</p>
       )}
 
       {clients.map((client) => (

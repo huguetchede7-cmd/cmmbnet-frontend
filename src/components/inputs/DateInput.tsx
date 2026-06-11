@@ -25,9 +25,11 @@ export function DateInput({
   // formater en YYYY-MM-DD
   function formatISO(d: Date | undefined) {
     if (!d) return ""
-    return d.toISOString().split("T")[0] // → "2025-02-26"
-  }
-
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+}
   useEffect(() => {
     if (value) {
       const parsed = new Date(value)

@@ -196,13 +196,14 @@ const apiRoutes = {
             roles: {
                 list: "/admin/app/user/administrator/all/roles",
             },
-            administrator: {
-                list: "/admin/app/user/administrator",
-                create: "/admin/app/user/administrator",
-                update: "/admin/app/user/administrator",
-                show: "/admin/app/user/administrator/show",
-                unblock: "/admin/app/user/administrator/unblockUser",
-                block: "/admin/app/user/administrator/blockUser",
+           administrator: {
+           list: "/admin/app/user/administrator",
+           create: "/admin/app/user/administrator",
+           update: "/admin/app/user/administrator",
+           show: "/admin/app/user/administrator/show",
+           delete: "/admin/app/user/administrator",
+           unblock: "/admin/app/user/administrator/unblockUser",
+           block: "/admin/app/user/administrator/blockUser",
             },
             clients: {
                 list: "/admin/app/clients",

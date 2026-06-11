@@ -1,10 +1,8 @@
 import { useAuth } from "@/lib/auth";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRightLeftIcon } from "lucide-react";
-import { routeHelpers } from "@/helpers/routeHelpers.ts";
 
 type Transaction = {
   id: string;
@@ -20,23 +18,48 @@ type Transaction = {
 
 export default function HistoriquePages() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+
+        const currentToken = (user as any)?.token;
+
+        console.log("🔑 Token utilisé :", currentToken ? "✅ OUI" : "❌ NON");
+
+        if (!currentToken) {
+          console.error("❌ Aucun token trouvé");
+          setLoading(false);
+          return;
+        }
+
+        const res = await axios.get("http://localhost:3001/admin/transactions", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`
+          }
+        });
+
+        console.log("✅ Succès ! Transactions :", res.data);
+        setTransactions(res.data.data || res.data || []);
+
+      } catch (error: any) {
+        console.error("❌ Erreur API :", error.response?.data || error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, [user]);
+
   return (
     <div className="space-y-6 max-w-[1200px] mx-auto p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <ArrowRightLeftIcon className="w-6 h-6 text-green-700" />
-          <h1 className="text-2xl font-bold tracking-tight">Historique des transactions</h1>
-        </div>
-        <Button
-          onClick={() => navigate(routeHelpers.dashboard.transactions.transfert.index)}
-          className="bg-green-700 hover:bg-green-800 text-white"
-        >
-          Nouveau transfert
-        </Button>
+      <div className="flex items-center gap-2">
+        <ArrowRightLeftIcon className="w-6 h-6 text-green-700" />
+        <h1 className="text-2xl font-bold tracking-tight">Historique des transactions</h1>
       </div>
 
       <Card>
@@ -54,7 +77,7 @@ export default function HistoriquePages() {
                 <thead>
                   <tr className="border-b text-left text-muted-foreground">
                     <th className="py-3 px-4">N° Transaction</th>
-                    <th className="py-3 px-4">Client</th>
+                    <th className="py-3 px-4">Membre</th>
                     <th className="py-3 px-4">N° Compte</th>
                     <th className="py-3 px-4">Type</th>
                     <th className="py-3 px-4">Montant</th>
@@ -70,11 +93,8 @@ export default function HistoriquePages() {
                       <td className="py-3 px-4">{t.numero_compte}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          t.type === "depot"
-                            ? "bg-green-100 text-green-700"
-                            : t.type === "retrait"
-                            ? "bg-red-100 text-red-700"
-                            : "bg-blue-100 text-blue-700"
+                          t.type === "depot" ? "bg-green-100 text-green-700" :
+                          t.type === "retrait" ? "bg-red-100 text-red-700" : "bg-blue-100 text-blue-700"
                         }`}>
                           {t.type === "depot" ? "Dépôt" : t.type === "retrait" ? "Retrait" : "Transfert"}
                         </span>
@@ -85,9 +105,7 @@ export default function HistoriquePages() {
                       <td className="py-3 px-4">{t.date}</td>
                       <td className="py-3 px-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          t.status === "success"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-yellow-100 text-yellow-700"
+                          t.status === "success" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                         }`}>
                           {t.status === "success" ? "Validé" : "En attente"}
                         </span>

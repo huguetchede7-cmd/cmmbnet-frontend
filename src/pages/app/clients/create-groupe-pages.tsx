@@ -105,7 +105,7 @@ export default function CreateGroupePage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Créer un groupe</h1>
         <p className="text-sm text-muted-foreground pt-1">
-          Créer un nouveau groupe de clients.
+          Créer un nouveau groupe de membres.
         </p>
       </div>
 
