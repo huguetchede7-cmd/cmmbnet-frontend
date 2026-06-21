@@ -18,6 +18,7 @@ type Utilisateur = {
   phone: string;
   ban_statut: boolean;
   created_at: string;
+  permissions?: { role_id: number }[];
 };
 
 type Role = {
@@ -86,18 +87,46 @@ export default function ParametresPage() {
     setShowFormModal(true);
   };
 
-  const openEditModal = (u: Utilisateur) => {
+  const openEditModal = async (u: Utilisateur) => {
     setEditUser(u);
-    setFormData({ firstname: u.firstname, lastname: u.lastname, email: u.email, password: "", role_ids: [] });
+    setFormData({
+      firstname: u.firstname,
+      lastname: u.lastname,
+      email: u.email,
+      password: "",
+      role_ids: [],
+    });
     setShowFormModal(true);
+
+    // Charger les rôles de cet utilisateur depuis l'API
+    try {
+      const response = await apiService.get(
+        { url: `${apiRoutes.admin.app.administrator.show}/${u.id}` },
+        { userToken: user?.token ?? "", hasNoSuccessModal: true }
+      );
+      const assignedRoles = response.data.permissions?.map((r: any) => r.role_id) || [];
+      setFormData((prev) => ({ ...prev, role_ids: assignedRoles }));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSave = async () => {
     setSaving(true);
+    console.log("formData envoyé :", formData); // ← vérifier ici
     try {
       if (editUser) {
         await apiService.put(
-          { url: `${apiRoutes.admin.app.administrator.update}/${editUser.id}`, body: formData },
+          { 
+            url: `${apiRoutes.admin.app.administrator.update}/${editUser.id}`, 
+            body: {
+              firstname: formData.firstname,
+              lastname: formData.lastname,
+              email: formData.email,
+              ...(formData.password ? { password: formData.password } : {}),
+              role_ids: formData.role_ids,
+            }
+          },
           { userToken: user?.token ?? "" }
         );
       } else {

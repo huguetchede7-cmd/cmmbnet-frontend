@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { PrinterIcon, DownloadIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoCMMB from "@/assets/logo-cmmb.png.jpeg";
@@ -6,17 +7,14 @@ type ReceiptType = "depot" | "retrait" | "compte";
 
 type ReceiptData = {
   type: ReceiptType;
-  // Commun
   nom: string;
   prenom: string;
   numero_compte: string;
   date: string;
-  // Dépôt / Retrait
   numero_transaction?: string;
   montant?: number;
   mode_paiement?: string;
   solde_apres?: number;
-  // Compte
   type_compte?: string;
   date_ouverture?: string;
   solde_initial?: number;
@@ -41,49 +39,168 @@ const modePaiementLabel: Record<string, string> = {
 };
 
 export default function ReceiptModal({ data, onClose }: Props) {
-  const handlePrint = () => window.print();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const handleDownloadPDF = () => {
-    window.print(); // Le navigateur propose PDF comme option d'impression
+  const getReceiptHTML = (logoBase64: string) => {
+    const dateFormatee = new Date(data.date).toLocaleDateString("fr-FR");
+    const dateOuverture = data.date_ouverture
+      ? new Date(data.date_ouverture).toLocaleDateString("fr-FR")
+      : "";
+
+    const detailsHTML =
+      data.type === "depot" || data.type === "retrait"
+        ? `
+          <div class="section-title">Détails de l'opération</div>
+          <table>
+            <tr>
+              <td class="label">N° Transaction</td>
+              <td class="value">${data.numero_transaction ?? "-"}</td>
+              <td class="label">Mode de paiement</td>
+              <td class="value">${modePaiementLabel[data.mode_paiement ?? ""] ?? data.mode_paiement ?? "-"}</td>
+            </tr>
+            <tr>
+              <td class="label">Montant</td>
+              <td class="value ${data.type === "depot" ? "green" : "red"}">
+                ${data.type === "depot" ? "+" : "-"}${Number(data.montant).toLocaleString()} FCFA
+              </td>
+              <td class="label">Solde après opération</td>
+              <td class="value blue">${Number(data.solde_apres).toLocaleString()} FCFA</td>
+            </tr>
+          </table>
+        `
+        : `
+          <div class="section-title">Détails du compte</div>
+          <table>
+            <tr>
+              <td class="label">Type de compte</td>
+              <td class="value">${data.type_compte === "epargne_ordinaire" ? "Épargne ordinaire" : "Épargne à terme"}</td>
+              <td class="label">Date d'ouverture</td>
+              <td class="value">${dateOuverture}</td>
+            </tr>
+            <tr>
+              <td class="label">Solde initial</td>
+              <td class="value green">${Number(data.solde_initial).toLocaleString()} FCFA</td>
+              <td></td><td></td>
+            </tr>
+          </table>
+        `;
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: Arial, sans-serif; padding: 15mm; color: #111; font-size: 13px; }
+            .header { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 16px; margin-bottom: 16px; width: 100%; }
+            .header img { height: 60px; display: block; margin: 0 auto 8px; }
+            .header p.sub { font-size: 11px; color: #888; margin-bottom: 6px; text-align: center; display: block; width: 100%; }
+            .header h1 { font-size: 16px; font-weight: bold; text-transform: uppercase; text-align: center; display: block; width: 100%; }
+            .header p.date { font-size: 11px; color: #aaa; margin-top: 4px; text-align: center; display: block; width: 100%; }
+            .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #888; margin: 14px 0 6px; }
+            table { width: 100%; border-collapse: collapse; }
+            td { padding: 6px 4px; vertical-align: top; }
+            td.label { color: #666; font-size: 12px; width: 25%; }
+            td.value { font-weight: 600; font-size: 13px; width: 25%; }
+            .green { color: #15803d; }
+            .red { color: #dc2626; }
+            .blue { color: #1d4ed8; }
+            .divider { border-top: 1px solid #ddd; margin: 14px 0; }
+            .footer { text-align: center; font-size: 11px; color: #aaa; margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+            @page { size: A4; margin: 0; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            ${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}
+            <p class="sub">Caisse du Mouvement Mutualiste Béninois</p>
+            <h1>${typeLabel(data.type)}</h1>
+            <p class="date">Date : ${dateFormatee}</p>
+          </div>
+          <div class="section-title">Membre</div>
+          <table>
+            <tr>
+              <td class="label">Nom & Prénom</td>
+              <td class="value">${data.nom} ${data.prenom}</td>
+              <td class="label">N° Compte</td>
+              <td class="value">${data.numero_compte}</td>
+            </tr>
+          </table>
+          <div class="divider"></div>
+          ${detailsHTML}
+          <div class="footer">
+            <p>Ce reçu est généré automatiquement par le système Cmmbnet</p>
+            <p>CMMB — Caisse du Mouvement Mutualiste Béninois</p>
+          </div>
+        </body>
+      </html>
+    `;
+  };
+
+  const handlePrint = () => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    const imgElement = document.querySelector("#receipt-preview-img") as HTMLImageElement;
+
+    const convertToBase64 = (img: HTMLImageElement): string => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth || 200;
+      canvas.height = img.naturalHeight || 80;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(img, 0, 0);
+      return canvas.toDataURL("image/jpeg");
+    };
+
+    const logoBase64 = imgElement ? convertToBase64(imgElement) : "";
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!doc) return;
+
+    doc.open();
+    doc.write(getReceiptHTML(logoBase64));
+    doc.close();
+
+    setTimeout(() => {
+      iframe.contentWindow?.focus();
+      iframe.contentWindow?.print();
+    }, 500);
   };
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <iframe ref={iframeRef} style={{ display: "none" }} title="print-frame" />
+
       <div className="bg-white rounded-lg w-full max-w-lg shadow-2xl">
 
-        {/* Boutons d'action */}
-        <div className="flex justify-between items-center px-6 py-4 border-b print:hidden">
+        {/* Boutons */}
+        <div className="flex justify-between items-center px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-700">Aperçu du reçu</h2>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrint}
-              className="flex items-center gap-2"
-            >
+            <Button variant="outline" size="sm" onClick={handlePrint} className="flex items-center gap-2">
               <PrinterIcon className="w-4 h-4" />
               Imprimer
             </Button>
-            <Button
-              size="sm"
-              onClick={handleDownloadPDF}
-              className="bg-green-700 hover:bg-green-800 text-white flex items-center gap-2"
-            >
+            <Button size="sm" onClick={handlePrint} className="bg-green-700 hover:bg-green-800 text-white flex items-center gap-2">
               <DownloadIcon className="w-4 h-4" />
               PDF
             </Button>
             <Button variant="ghost" size="sm" onClick={onClose}>
-            <XIcon className="w-4 h-4" />
+              <XIcon className="w-4 h-4" />
             </Button>
           </div>
         </div>
 
-        {/* Contenu du reçu */}
-        <div id="receipt-content" className="p-6 space-y-4">
-
-          {/* En-tête */}
+        {/* Aperçu */}
+        <div className="p-6 space-y-4">
           <div className="text-center space-y-2 border-b pb-4">
-            <img src={logoCMMB} alt="CMMB" className="h-14 mx-auto object-contain" />
+            <img
+              id="receipt-preview-img"
+              src={logoCMMB}
+              alt="CMMB"
+              className="h-14 mx-auto object-contain"
+            />
             <p className="text-xs text-gray-500">Caisse du Mouvement Mutualiste Béninois</p>
             <h1 className="text-lg font-bold tracking-wide text-gray-800 uppercase">
               {typeLabel(data.type)}
@@ -91,7 +208,6 @@ export default function ReceiptModal({ data, onClose }: Props) {
             <p className="text-xs text-gray-400">Date : {new Date(data.date).toLocaleDateString("fr-FR")}</p>
           </div>
 
-          {/* Informations membre */}
           <div className="space-y-2">
             <p className="text-xs font-semibold text-gray-500 uppercase">Membre</p>
             <div className="grid grid-cols-2 gap-2 text-sm">
@@ -107,7 +223,6 @@ export default function ReceiptModal({ data, onClose }: Props) {
           </div>
 
           <div className="border-t pt-3 space-y-2">
-            {/* Reçu dépôt / retrait */}
             {(data.type === "depot" || data.type === "retrait") && (
               <>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Détails de l'opération</p>
@@ -126,12 +241,16 @@ export default function ReceiptModal({ data, onClose }: Props) {
                       {data.type === "depot" ? "+" : "-"}{Number(data.montant).toLocaleString()} FCFA
                     </p>
                   </div>
-                  
+                  <div>
+                    <p className="text-gray-500">Solde après opération</p>
+                    <p className="font-bold text-base text-blue-700">
+                      {Number(data.solde_apres).toLocaleString()} FCFA
+                    </p>
+                  </div>
                 </div>
               </>
             )}
 
-            {/* Reçu ouverture de compte */}
             {data.type === "compte" && (
               <>
                 <p className="text-xs font-semibold text-gray-500 uppercase">Détails du compte</p>
@@ -155,13 +274,11 @@ export default function ReceiptModal({ data, onClose }: Props) {
             )}
           </div>
 
-          {/* Pied de page */}
           <div className="border-t pt-3 text-center text-xs text-gray-400 space-y-1">
             <p>Ce reçu est généré automatiquement par le système Cmmbnet</p>
             <p>CMMB — Caisse du Mouvement Mutualiste Béninois</p>
           </div>
         </div>
-
       </div>
     </div>
   );

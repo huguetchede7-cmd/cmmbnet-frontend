@@ -13,7 +13,6 @@ const apiClient = axios.create({
 });
 
 const checkAndHandleUnauthorized = (error: unknown) => {
-    // Check if error is AxiosError and has a 401 code, execute logout logic
     if (
         error instanceof AxiosError &&
         error.response &&
@@ -69,7 +68,6 @@ const post = async (
     }
 };
 
-// ➕ AJOUT PUT
 const put = async (
     data: { url: string; body?: unknown | null; headers?: unknown | null },
     miscellaneous: { userToken: string; hasNoSuccessModal?: boolean } | null = null
@@ -94,7 +92,6 @@ const put = async (
     }
 };
 
-// ➕ AJOUT DELETE
 const del = async (
     data: { url: string; params?: unknown; headers?: unknown | null },
     miscellaneous: { userToken: string; hasNoSuccessModal?: boolean } | null = null
@@ -107,11 +104,9 @@ const del = async (
                 ...(data?.headers ?? {}),
             },
         });
-
         if (!miscellaneous?.hasNoSuccessModal) {
             handleSucess(response.data);
         }
-
         return response.data as ApiResponseTypes;
     } catch (error) {
         checkAndHandleUnauthorized(error);

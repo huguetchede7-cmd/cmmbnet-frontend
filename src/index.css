@@ -190,6 +190,15 @@
 }
 @media print {
   body * { visibility: hidden; }
+
   #receipt-content, #receipt-content * { visibility: visible; }
   #receipt-content { position: absolute; left: 0; top: 0; width: 100%; }
+
+  #recu-compte, #recu-compte * { visibility: visible; }
+  #recu-compte { position: absolute; left: 0; top: 0; width: 100%; padding: 20mm; }
+
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
 }

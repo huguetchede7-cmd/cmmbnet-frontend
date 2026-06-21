@@ -226,9 +226,18 @@ export default function CreateComptePage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-green-700">✅ Compte ouvert avec succès !</h1>
           <div className="flex gap-2">
-            <Button onClick={() => window.print()} className="bg-green-700 hover:bg-green-800 text-white">
-              🖨️ Imprimer le reçu
-            </Button>
+            <Button
+  onClick={() => {
+    const style = document.createElement("style");
+    style.innerHTML = `@page { margin: 0; } @media print { #recu-compte { padding: 15mm; } }`;
+    document.head.appendChild(style);
+    window.print();
+    document.head.removeChild(style);
+  }}
+  className="bg-green-700 hover:bg-green-800 text-white"
+>
+  🖨️ Imprimer le reçu
+</Button>
             <Button variant="outline" onClick={() => navigate(routeHelpers.dashboard.comptes.index)}>
               Fermer
             </Button>

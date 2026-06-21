@@ -14,43 +14,49 @@ type Transaction = {
   montant: number;
   date: string;
   status: string;
+  effectue_par: string;
 };
 
 export default function HistoriquePages() {
   const { user } = useAuth();
+  console.log("USER COMPLET:", JSON.stringify(user));  // ← ajoute ici
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const userRoles: string[] = ((user as any)?.roles ?? []).map((r: any) => r?.slug ?? '');
+  const isAdmin = userRoles.includes('admin') || userRoles.length === 0;
+  const isCashier = userRoles.includes('cashier') && !userRoles.includes('savings_officer') && !isAdmin;
+
   useEffect(() => {
     const fetchTransactions = async () => {
-      try {
-        setLoading(true);
+  try {
+    setLoading(true);
+    const currentToken = (user as any)?.token;
+    if (!currentToken) { setLoading(false); return; }
 
-        const currentToken = (user as any)?.token;
+    const isCaissier = (user as any)?.roles?.some((r: any) => r?.slug === 'cashier');
+    const username = (user as any)?.username;
 
-        console.log("🔑 Token utilisé :", currentToken ? "✅ OUI" : "❌ NON");
+    const url = isCaissier
+      ? `http://localhost:3001/admin/transactions?username=${username}`
+      : "http://localhost:3001/admin/transactions";
 
-        if (!currentToken) {
-          console.error("❌ Aucun token trouvé");
-          setLoading(false);
-          return;
-        }
+   const authUserId = String((user as any)?.id ?? '');
 
-        const res = await axios.get("http://localhost:3001/admin/transactions", {
-          headers: {
-            Authorization: `Bearer ${currentToken}`
-          }
-        });
+const res = await axios.get("http://localhost:3001/admin/transactions", {
+  headers: {
+    Authorization: `Bearer ${currentToken}`,
+    auth_user: authUserId
+  }
+});
 
-        console.log("✅ Succès ! Transactions :", res.data);
-        setTransactions(res.data.data || res.data || []);
-
-      } catch (error: any) {
-        console.error("❌ Erreur API :", error.response?.data || error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setTransactions(res.data.data || res.data || []);
+  } catch (error: any) {
+    console.error("❌ Erreur API :", error.response?.data || error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchTransactions();
   }, [user]);
@@ -83,6 +89,9 @@ export default function HistoriquePages() {
                     <th className="py-3 px-4">Montant</th>
                     <th className="py-3 px-4">Date</th>
                     <th className="py-3 px-4">Statut</th>
+                    {!isCashier && (
+                      <th className="py-3 px-4">Effectué par</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -110,6 +119,9 @@ export default function HistoriquePages() {
                           {t.status === "success" ? "Validé" : "En attente"}
                         </span>
                       </td>
+                      {!isCashier && (
+                        <td className="py-3 px-4 text-muted-foreground">{t.effectue_par}</td>
+                      )}
                     </tr>
                   ))}
                 </tbody>

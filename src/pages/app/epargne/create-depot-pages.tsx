@@ -70,8 +70,8 @@ export default function CreateDepotPage() {
     { id: "cheque", name: "Chèque" },
   ];
 
-  const depotFields: FieldOption[] = [
-    { tag: "montant", label: "Montant (FCFA)", input_type: "number", size: "col-span-6", required: true },
+     const depotFields: FieldOption[] = [
+    { tag: "montant", label: "Montant (FCFA)", input_type: "number", size: "col-span-6", required: true, disabled: compte?.type_compte === "epargne_terme" },
     { tag: "date_depot", label: "Date du dépôt", input_type: "date", size: "col-span-6", required: true },
     {
       tag: "mode_paiement",
@@ -189,11 +189,11 @@ export default function CreateDepotPage() {
     if (compteId) loadCompte(compteId);
   }, []);
 
-  const handleSelectVersement = (v: Versement) => {
-    if (v.paye) return;
-    setVersementSelectionne(v);
-    form.setValue("montant", v.montant);
-  };
+ const handleSelectVersement = (v: Versement) => {
+  if (v.paye) return;
+  setVersementSelectionne(v);
+  form.setValue("montant", v.montant);
+};
 
   const handleOnCreate = async (values: z.infer<typeof formSchema>) => {
     if (!compte) return;
@@ -324,11 +324,14 @@ export default function CreateDepotPage() {
               ))}
             </div>
             {versementSelectionne && (
-              <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-                Versement <strong>{versementSelectionne.numero}/{versements.length}</strong> sélectionné —
-                Montant pré-rempli : <strong>{versementSelectionne.montant.toLocaleString('fr-FR')} FCFA</strong>
-              </div>
-            )}
+  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+    Versement <strong>{versementSelectionne.numero}/{versements.length}</strong> sélectionné —
+    Montant fixé à <strong>{versementSelectionne.montant.toLocaleString('fr-FR')} FCFA</strong>
+    <p className="text-xs text-orange-600 mt-1">
+      ⚠️ Un dépôt = un seul versement. Pour payer plusieurs versements, effectuez plusieurs dépôts séparés.
+    </p>
+  </div>
+)}
           </CardContent>
         </Card>
       )}
