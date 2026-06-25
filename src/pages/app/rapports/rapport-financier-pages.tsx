@@ -76,7 +76,7 @@ export default function RapportFinancierPages() {
       setLoading(true);
       try {
         const response = await apiService.get(
-          { url: "http://localhost:3001/admin/transactions" },
+          { url: "http://localhost:3000/admin/transactions" },
           { userToken: (user as any)?.token ?? "", hasNoSuccessModal: true }
         );
         setTransactions(response?.data ?? []);
