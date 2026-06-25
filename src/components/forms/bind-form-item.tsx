@@ -94,20 +94,17 @@ const BindFormItem = ({ index, option, form, tag, readonly = false }: { index: n
                 disabled={readonly}
               />
             ) : option.input_type === 'select' ? (
-              <Select value={(field.value as string) || ''} onValueChange={field.onChange} defaultValue={option.defaultValue} disabled={readonly}>
-                <SelectTrigger className={` ${FormInputHelper.getInputBorderClass(form, option.tag, field.value)}`} >
-                  <SelectValue placeholder={(option.placeholder as string) || ''} />
-                </SelectTrigger>
-                <SelectContent aria-readonly={readonly}>
-                  {option.options && option.options.length > 0 &&
-                    option.options.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))
-                  }
-                </SelectContent>
-              </Select>
+  <select
+    value={(field.value as string) || ''}
+    onChange={(e) => field.onChange(e.target.value)}
+    disabled={readonly}
+    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+  >
+    <option value="">{(option.placeholder as string) || 'Sélectionnez...'}</option>
+    {option.options && option.options.map((opt) => (
+      <option key={opt.value} value={opt.value}>{opt.label}</option>
+    ))}
+  </select>
             ) : option.input_type === "colorpicker_" ? (
               <ColorPickerInput
                 colors={option.options?.map((opt) => ({
