@@ -38,12 +38,12 @@ export default function HistoriquePages() {
     const username = (user as any)?.username;
 
     const url = isCaissier
-      ? `http://localhost:3001/admin/transactions?username=${username}`
-      : "http://localhost:3001/admin/transactions";
+      ? `${genralConfig.apiUrl}/admin/transactions?username=${username}`
+      : "${genralConfig.apiUrl}/admin/transactions";
 
    const authUserId = String((user as any)?.id ?? '');
 
-const res = await axios.get("http://localhost:3001/admin/transactions", {
+const res = await axios.get("${genralConfig.apiUrl}/admin/transactions", {
   headers: {
     Authorization: `Bearer ${currentToken}`,
     auth_user: authUserId

@@ -173,7 +173,7 @@ export default function DetailClientPages() {
             {client.photo && (
               <div className="mb-4">
                 <img
-                  src={`http://localhost:3001/${client.photo}`}
+                  src={`${genralConfig.apiUrl}/${client.photo}`}
                   alt="Photo client"
                   className="w-24 h-24 rounded-full object-cover border"
                 />
