@@ -1,8 +1,8 @@
 const genralConfig = {
-  apiUrl: "http://localhost:3001",
+  apiUrl: "https://mdb-back.onrender.com",
   iconUrl: "...",
   appName: "MICROFINANCE",
   imageStoragePrefix: "...",
 }
 
-export  {genralConfig}
+export { genralConfig }
