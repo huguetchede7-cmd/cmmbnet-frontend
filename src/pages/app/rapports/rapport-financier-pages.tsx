@@ -7,6 +7,7 @@ import apiService from "@/api/apiService.ts";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar
 } from "recharts";
+import { genralConfig } from '../../../../config';
 
 type Transaction = {
   id: string;
@@ -76,7 +77,7 @@ export default function RapportFinancierPages() {
       setLoading(true);
       try {
         const response = await apiService.get(
-          { url: "${genralConfig.apiUrl}/admin/transactions" },
+          { url: `${genralConfig.apiUrl}/admin/transactions` },
           { userToken: (user as any)?.token ?? "", hasNoSuccessModal: true }
         );
         setTransactions(response?.data ?? []);

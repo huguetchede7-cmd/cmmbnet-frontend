@@ -1,3 +1,4 @@
+import { genralConfig } from '../../../../config'
 import { useAuth } from "@/lib/auth";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -39,11 +40,11 @@ export default function HistoriquePages() {
 
     const url = isCaissier
       ? `${genralConfig.apiUrl}/admin/transactions?username=${username}`
-      : "${genralConfig.apiUrl}/admin/transactions";
+      : `${genralConfig.apiUrl}/admin/transactions`;
 
    const authUserId = String((user as any)?.id ?? '');
 
-const res = await axios.get("${genralConfig.apiUrl}/admin/transactions", {
+const res = await axios.get(`${genralConfig.apiUrl}/admin/transactions`, {
   headers: {
     Authorization: `Bearer ${currentToken}`,
     auth_user: authUserId

@@ -7,6 +7,7 @@ import { UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, FileTextIcon, ArrowLef
 import apiService from "@/api/apiService.ts";
 import apiRoutes from "@/api/apiRoutes.ts";
 import { routeHelpers } from "@/helpers/routeHelpers.ts";
+import { genralConfig } from '../../../../config';
 
 type Client = {
   id: string;
