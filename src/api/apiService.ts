@@ -30,7 +30,7 @@ const get = async (
         const response = await apiClient.get(data.url, {
             params: data.params,
             headers: {
-                Authorization: `${miscellaneous?.userToken}`,
+                Authorization: `Bearer ${miscellaneous?.userToken}`,
                 ...(data?.headers ?? {}),
             },
         });
@@ -51,7 +51,7 @@ const post = async (
     try {
         const response = await apiClient.post(data.url, data.body, {
             headers: {
-                Authorization: `${miscellaneous?.userToken}`,
+                Authorization: `Bearer ${miscellaneous?.userToken}`,
                 ...(data?.headers ?? {}),
             },
         });
@@ -75,7 +75,7 @@ const put = async (
     try {
         const response = await apiClient.put(data.url, data.body, {
             headers: {
-                Authorization: `${miscellaneous?.userToken}`,
+                Authorization: `Bearer ${miscellaneous?.userToken}`,
                 ...(data?.headers ?? {}),
             },
         });
@@ -100,7 +100,7 @@ const del = async (
         const response = await apiClient.delete(data.url, {
             params: data.params,
             headers: {
-                Authorization: `${miscellaneous?.userToken}`,
+                Authorization: `Bearer ${miscellaneous?.userToken}`,
                 ...(data?.headers ?? {}),
             },
         });
