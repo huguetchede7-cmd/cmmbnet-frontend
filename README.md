@@ -1,21 +1,40 @@
-# React + TypeScript + Vite + shadcn/ui
+# CMMBNet : Gestion de l'épargne pour la microfinance
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+Plateforme web de gestion de l'épargne pour la CMMB, institution de
+microfinance au Bénin. Projet de fin d'études (Licence Pro SIL, ESTG Bénin, 2026).
 
-## Adding components
+🔗 **Démo** : https://mdb-front-bice.vercel.app
 
-To add components to your app, run the following command:
+## Fonctionnalités
+- Gestion des membres et de leurs comptes d'épargne
+- **Épargne ordinaire** : dépôts et retraits libres
+- **Épargne à terme** (compte bloqué) : versements périodiques, intérêts selon l'échéance
+- Génération de reçus et historique des transactions
+- Tableau de bord statistique
+- Accès par rôles : administrateur, caissier, chargé d'épargne
 
-```bash
-npx shadcn@latest add button
-```
+## Technologies
+React · Vite · TypeScript · shadcn/ui · Node.js · Express · MySQL · Sequelize · JWT
 
-This will place the ui components in the `src/components` directory.
+## Captures d'écran
 
-## Using components
 
-To use the components in your app, import them as follows:
+![Tableau de bord](./public/screenshots/dashboard.png)
 
-```tsx
-import { Button } from "@/components/ui/button"
-```
+
+
+
+![Épargne](./public/screenshots/epargne.png)
+
+
+
+## Installation
+1. `git clone <lien du dépôt>`
+2. `npm install`
+3. Copier `config.exemple.ts` vers `config.ts` et renseigner l'URL de l'API
+4. `npm run dev`
+
+Le backend est ici : [mdb_back](https://github.com/huguetchede7-cmd/mdb_back)
+
+## Auteur
+Hugues Akpado Tchede · huguetchede7@gmail.com
