@@ -34,7 +34,7 @@ React · Vite · TypeScript · shadcn/ui · Node.js · Express · MySQL · Seque
 3. Copier `config.exemple.ts` vers `config.ts` et renseigner l'URL de l'API
 4. `npm run dev`
 
-Le backend est ici : [mdb_back](https://github.com/huguetchede7-cmd/mdb_back)
+Le backend est ici : [mdb_back](https://github.com/huguetchede7-cmd/cmmbnet-backend)
 
 ## Auteur
 Hugues Akpado Tchede · huguetchede7@gmail.com
