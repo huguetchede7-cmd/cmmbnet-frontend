@@ -88,32 +88,41 @@ export default function ReceiptModal({ data, onClose }: Props) {
 
     const exemplaire = (mention: string) => `
       <div class="copie">
-        <div class="badge">${mention}</div>
-        <div class="header">
-          ${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}
-          <p class="sub">Caisse du Mouvement Mutualiste Béninois (CMMB)</p>
-          <p class="inst">Institution mutualiste d'épargne et de crédit</p>
-          <p class="coord">C/718 Gbégamey, 02 BP 948 Cotonou, Bénin<br/>Tél : +229 01 56 35 19 95 — contact@cmmb.bj</p>
-          <h1>${typeLabel(data.type)}</h1>
-          <p class="date">Date : ${dateFormatee}</p>
-        </div>
-        <div class="section-title">Membre</div>
-        <table>
-          <tr>
-            <td class="label">Nom & Prénom</td>
-            <td class="value">${data.nom} ${data.prenom}</td>
-            <td class="label">N° Compte</td>
-            <td class="value">${data.numero_compte}</td>
-          </tr>
-        </table>
-        <div class="divider"></div>
-        ${detailsHTML}
-        <div class="signatures">
-          <div>Signature du client</div>
-          <div>Signature de l'agent</div>
-        </div>
-        <div class="footer">
-          <p>Institution agréée sous le n° L.02.0011.A du 04/01/2002 — Conservez ce reçu</p>
+        ${logoBase64 ? `<img class="wm" src="${logoBase64}" alt="" />` : ""}
+        <div class="cadre">
+          <div class="bandeau">
+            <div class="logo-box">${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}</div>
+            <div class="inst">
+              <p class="nom">Caisse du Mouvement Mutualiste Béninois</p>
+              <p class="sigle">CMMB — Institution mutualiste d'épargne et de crédit</p>
+              <p class="coord">C/718 Gbégamey, 02 BP 948 Cotonou, Bénin<br/>Tél : +229 01 56 35 19 95 — contact@cmmb.bj</p>
+            </div>
+            <div class="badge">${mention}</div>
+          </div>
+          <div class="titre">
+            <h1>${typeLabel(data.type)}</h1>
+            <div class="trait"></div>
+            <p>Date : ${dateFormatee}</p>
+          </div>
+          <div class="corps">
+            <div class="section-title">Membre</div>
+            <table>
+              <tr>
+                <td class="label">Nom & Prénom</td>
+                <td class="value">${data.nom} ${data.prenom}</td>
+                <td class="label">N° Compte</td>
+                <td class="value">${data.numero_compte}</td>
+              </tr>
+            </table>
+            ${detailsHTML}
+            <div class="signatures">
+              <div>Signature du client</div>
+              <div>Signature de l'agent</div>
+            </div>
+          </div>
+          <div class="pied">
+            Institution agréée sous le n° L.02.0011.A du 04/01/2002 — Conservez ce reçu
+          </div>
         </div>
       </div>
     `;
@@ -124,29 +133,34 @@ export default function ReceiptModal({ data, onClose }: Props) {
         <head>
           <meta charset="UTF-8" />
           <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; color: #111; font-size: 12px; }
-            .copie { height: 141mm; padding: 6mm 12mm; overflow: hidden; position: relative; }
-            .badge { position: absolute; top: 6mm; right: 12mm; border: 1px solid #333; padding: 2px 8px; font-size: 10px; font-weight: bold; }
-            .header { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
-            .header img { height: 45px; display: block; margin: 0 auto 6px; }
-            .header p.sub { font-size: 11px; color: #888; margin-bottom: 4px; }
-            .header h1 { font-size: 15px; font-weight: bold; text-transform: uppercase; }
-            .header p.inst { font-size: 10px; color: #555; margin-bottom: 2px; }
-            .header p.coord { font-size: 10px; color: #777; margin-bottom: 6px; }
-            .header p.date { font-size: 11px; color: #aaa; margin-top: 4px; }
-            .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #888; margin: 10px 0 4px; }
+            * { margin: 0; padding: 0; box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { font-family: Arial, sans-serif; color: #1f2a24; font-size: 12px; }
+            .copie { height: 141mm; padding: 5mm 8mm; position: relative; overflow: hidden; }
+            .wm { position: absolute; top: 50%; left: 50%; width: 95mm; transform: translate(-50%, -50%); opacity: 0.07; z-index: 0; }
+            .cadre { position: relative; z-index: 1; height: 100%; border: 1.5px solid #14532d; border-radius: 3mm; display: flex; flex-direction: column; overflow: hidden; }
+            .bandeau { background: #14532d; color: #fff; display: flex; align-items: center; gap: 4mm; padding: 3mm 4mm; }
+            .logo-box { background: #fff; border-radius: 2mm; padding: 1mm; display: flex; align-items: center; justify-content: center; }
+            .logo-box img { height: 14mm; display: block; }
+            .inst .nom { font-size: 13px; font-weight: bold; }
+            .inst .sigle { font-size: 10px; margin-top: 1px; opacity: 0.9; }
+            .inst .coord { font-size: 9px; margin-top: 3px; opacity: 0.85; line-height: 1.4; }
+            .badge { margin-left: auto; background: #b8892b; color: #fff; font-size: 9px; font-weight: bold; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+            .titre { text-align: center; padding: 3mm 0 1mm; }
+            .titre h1 { font-size: 15px; color: #14532d; text-transform: uppercase; }
+            .titre .trait { width: 30mm; height: 2px; background: #b8892b; margin: 2mm auto; }
+            .titre p { font-size: 11px; color: #6b6b5e; }
+            .corps { flex: 1; display: flex; flex-direction: column; padding: 1mm 8mm 3mm; }
+            .section-title { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #b8892b; border-bottom: 1px solid #e5dfc9; padding-bottom: 2px; margin: 8px 0 4px; }
             table { width: 100%; border-collapse: collapse; }
             td { padding: 4px; vertical-align: top; }
-            td.label { color: #666; font-size: 12px; width: 25%; }
+            td.label { color: #6b6b5e; font-size: 12px; width: 25%; }
             td.value { font-weight: 600; font-size: 13px; width: 25%; }
             .green { color: #15803d; }
             .red { color: #dc2626; }
-            .blue { color: #1d4ed8; }
-            .divider { border-top: 1px solid #ddd; margin: 10px 0; }
-            .signatures { display: flex; justify-content: space-between; margin-top: 18px; font-size: 11px; color: #555; }
-            .signatures div { width: 45%; border-top: 1px solid #999; padding-top: 4px; text-align: center; }
-            .footer { text-align: center; font-size: 10px; color: #aaa; margin-top: 10px; }
+            .blue { color: #14532d; }
+            .signatures { display: flex; justify-content: space-between; margin-top: auto; padding-top: 10mm; font-size: 11px; color: #555; }
+            .signatures div { width: 42%; border-top: 1px solid #999; padding-top: 4px; text-align: center; }
+            .pied { background: #e8f1ea; color: #14532d; text-align: center; font-size: 9px; padding: 2mm; border-top: 2px solid #b8892b; }
             .cut { border-top: 2px dashed #999; text-align: center; font-size: 10px; color: #999; }
             @page { size: A4; margin: 0; }
           </style>
