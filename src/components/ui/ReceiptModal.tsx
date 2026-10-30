@@ -1,3 +1,4 @@
+
 import { useRef } from "react";
 import { PrinterIcon, DownloadIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -85,6 +86,36 @@ export default function ReceiptModal({ data, onClose }: Props) {
           </table>
         `;
 
+    const exemplaire = (mention: string) => `
+      <div class="copie">
+        <div class="badge">${mention}</div>
+        <div class="header">
+          ${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}
+          <p class="sub">Caisse du Mouvement Mutualiste Béninois</p>
+          <h1>${typeLabel(data.type)}</h1>
+          <p class="date">Date : ${dateFormatee}</p>
+        </div>
+        <div class="section-title">Membre</div>
+        <table>
+          <tr>
+            <td class="label">Nom & Prénom</td>
+            <td class="value">${data.nom} ${data.prenom}</td>
+            <td class="label">N° Compte</td>
+            <td class="value">${data.numero_compte}</td>
+          </tr>
+        </table>
+        <div class="divider"></div>
+        ${detailsHTML}
+        <div class="signatures">
+          <div>Signature du client</div>
+          <div>Signature de l'agent</div>
+        </div>
+        <div class="footer">
+          <p>Reçu généré par le système Cmmbnet — CMMB</p>
+        </div>
+      </div>
+    `;
+
     return `
       <!DOCTYPE html>
       <html>
@@ -92,47 +123,34 @@ export default function ReceiptModal({ data, onClose }: Props) {
           <meta charset="UTF-8" />
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; padding: 15mm; color: #111; font-size: 13px; }
-            .header { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 16px; margin-bottom: 16px; width: 100%; }
-            .header img { height: 60px; display: block; margin: 0 auto 8px; }
-            .header p.sub { font-size: 11px; color: #888; margin-bottom: 6px; text-align: center; display: block; width: 100%; }
-            .header h1 { font-size: 16px; font-weight: bold; text-transform: uppercase; text-align: center; display: block; width: 100%; }
-            .header p.date { font-size: 11px; color: #aaa; margin-top: 4px; text-align: center; display: block; width: 100%; }
-            .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #888; margin: 14px 0 6px; }
+            body { font-family: Arial, sans-serif; color: #111; font-size: 12px; }
+            .copie { height: 141mm; padding: 6mm 12mm; overflow: hidden; position: relative; }
+            .badge { position: absolute; top: 6mm; right: 12mm; border: 1px solid #333; padding: 2px 8px; font-size: 10px; font-weight: bold; }
+            .header { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; }
+            .header img { height: 45px; display: block; margin: 0 auto 6px; }
+            .header p.sub { font-size: 11px; color: #888; margin-bottom: 4px; }
+            .header h1 { font-size: 15px; font-weight: bold; text-transform: uppercase; }
+            .header p.date { font-size: 11px; color: #aaa; margin-top: 4px; }
+            .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #888; margin: 10px 0 4px; }
             table { width: 100%; border-collapse: collapse; }
-            td { padding: 6px 4px; vertical-align: top; }
+            td { padding: 4px; vertical-align: top; }
             td.label { color: #666; font-size: 12px; width: 25%; }
             td.value { font-weight: 600; font-size: 13px; width: 25%; }
             .green { color: #15803d; }
             .red { color: #dc2626; }
             .blue { color: #1d4ed8; }
-            .divider { border-top: 1px solid #ddd; margin: 14px 0; }
-            .footer { text-align: center; font-size: 11px; color: #aaa; margin-top: 20px; border-top: 1px solid #eee; padding-top: 12px; }
+            .divider { border-top: 1px solid #ddd; margin: 10px 0; }
+            .signatures { display: flex; justify-content: space-between; margin-top: 18px; font-size: 11px; color: #555; }
+            .signatures div { width: 45%; border-top: 1px solid #999; padding-top: 4px; text-align: center; }
+            .footer { text-align: center; font-size: 10px; color: #aaa; margin-top: 10px; }
+            .cut { border-top: 2px dashed #999; text-align: center; font-size: 10px; color: #999; }
             @page { size: A4; margin: 0; }
           </style>
         </head>
         <body>
-          <div class="header">
-            ${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}
-            <p class="sub">Caisse du Mouvement Mutualiste Béninois</p>
-            <h1>${typeLabel(data.type)}</h1>
-            <p class="date">Date : ${dateFormatee}</p>
-          </div>
-          <div class="section-title">Membre</div>
-          <table>
-            <tr>
-              <td class="label">Nom & Prénom</td>
-              <td class="value">${data.nom} ${data.prenom}</td>
-              <td class="label">N° Compte</td>
-              <td class="value">${data.numero_compte}</td>
-            </tr>
-          </table>
-          <div class="divider"></div>
-          ${detailsHTML}
-          <div class="footer">
-            <p>Ce reçu est généré automatiquement par le système Cmmbnet</p>
-            <p>CMMB — Caisse du Mouvement Mutualiste Béninois</p>
-          </div>
+          ${exemplaire("COPIE CLIENT")}
+          <div class="cut">✂ découper ici</div>
+          ${exemplaire("COPIE AGENCE (ARCHIVE)")}
         </body>
       </html>
     `;
@@ -173,8 +191,6 @@ export default function ReceiptModal({ data, onClose }: Props) {
       <iframe ref={iframeRef} style={{ display: "none" }} title="print-frame" />
 
       <div className="bg-white rounded-lg w-full max-w-lg shadow-2xl">
-
-        {/* Boutons */}
         <div className="flex justify-between items-center px-6 py-4 border-b">
           <h2 className="font-semibold text-gray-700">Aperçu du reçu</h2>
           <div className="flex gap-2">
@@ -192,7 +208,6 @@ export default function ReceiptModal({ data, onClose }: Props) {
           </div>
         </div>
 
-        {/* Aperçu */}
         <div className="p-6 space-y-4">
           <div className="text-center space-y-2 border-b pb-4">
             <img
@@ -277,6 +292,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
           <div className="border-t pt-3 text-center text-xs text-gray-400 space-y-1">
             <p>Ce reçu est généré automatiquement par le système Cmmbnet</p>
             <p>CMMB — Caisse du Mouvement Mutualiste Béninois</p>
+            <p>L'impression produit deux exemplaires : copie client et copie agence.</p>
           </div>
         </div>
       </div>
