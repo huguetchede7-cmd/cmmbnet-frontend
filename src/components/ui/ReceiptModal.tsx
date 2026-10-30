@@ -91,7 +91,9 @@ export default function ReceiptModal({ data, onClose }: Props) {
         <div class="badge">${mention}</div>
         <div class="header">
           ${logoBase64 ? `<img src="${logoBase64}" alt="CMMB" />` : ""}
-          <p class="sub">Caisse du Mouvement Mutualiste Béninois</p>
+          <p class="sub">Caisse du Mouvement Mutualiste Béninois (CMMB)</p>
+          <p class="inst">Institution mutualiste d'épargne et de crédit</p>
+          <p class="coord">C/718 Gbégamey, 02 BP 948 Cotonou, Bénin<br/>Tél : +229 01 56 35 19 95 — contact@cmmb.bj</p>
           <h1>${typeLabel(data.type)}</h1>
           <p class="date">Date : ${dateFormatee}</p>
         </div>
@@ -111,7 +113,7 @@ export default function ReceiptModal({ data, onClose }: Props) {
           <div>Signature de l'agent</div>
         </div>
         <div class="footer">
-          <p>Reçu généré par le système Cmmbnet — CMMB</p>
+          <p>Institution agréée sous le n° L.02.0011.A du 04/01/2002 — Conservez ce reçu</p>
         </div>
       </div>
     `;
@@ -130,6 +132,8 @@ export default function ReceiptModal({ data, onClose }: Props) {
             .header img { height: 45px; display: block; margin: 0 auto 6px; }
             .header p.sub { font-size: 11px; color: #888; margin-bottom: 4px; }
             .header h1 { font-size: 15px; font-weight: bold; text-transform: uppercase; }
+            .header p.inst { font-size: 10px; color: #555; margin-bottom: 2px; }
+            .header p.coord { font-size: 10px; color: #777; margin-bottom: 6px; }
             .header p.date { font-size: 11px; color: #aaa; margin-top: 4px; }
             .section-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #888; margin: 10px 0 4px; }
             table { width: 100%; border-collapse: collapse; }
